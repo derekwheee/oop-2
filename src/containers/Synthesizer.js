@@ -1,6 +1,7 @@
 const { useCallback } = require('react');
 const T = require('prop-types');
 const KeyboardTransport = require('./KeyboardTransport');
+const Visualizer = require('../components/Visualizer');
 const { SYNTH_TRANSPORTS } = require('../utils/constants');
 
 const internals = {};
@@ -23,9 +24,14 @@ module.exports = function Synthesizer({ Tone, transport }) {
         return null;
     }
 
-    if (transport === SYNTH_TRANSPORTS.KEYBOARD) {
-        return <KeyboardTransport synth={synth} attack={attack} release={release} />;
-    }
+    return (
+        <>
+            {transport === SYNTH_TRANSPORTS.KEYBOARD && (
+                <KeyboardTransport synth={synth} attack={attack} release={release} />
+            )}
+            <Visualizer context={Tone} synth={synth} />
+        </>
+    );
 
     return null;
 };

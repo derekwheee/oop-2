@@ -12,6 +12,10 @@ module.exports = function HomepageContainer() {
 
     const handlePower = async () => {
 
+        if (audioContext) {
+            return;
+        }
+
         await Tone.start();
 
         setAudioContext(Tone);

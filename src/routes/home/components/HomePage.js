@@ -6,7 +6,7 @@ const internals = {};
 
 module.exports = function HomePage({ onPower, isReady }) {
 
-    const { Status } = internals;
+    const { Status, Indicator } = internals;
 
     useEffect(() => {
 
@@ -19,7 +19,9 @@ module.exports = function HomePage({ onPower, isReady }) {
     }, [onPower]);
 
     return (
-        <Status $isReady={isReady} />
+        <Status $isReady={isReady}>
+            <Indicator $isActive={isReady}>Power</Indicator>
+        </Status>
     );
 };
 
@@ -29,8 +31,21 @@ module.exports.propTypes = {
 };
 
 internals.Status = Styled.div`
+    display: flex;
     width: 100%;
     height: 50px;
     margin: auto;
-    background: ${(props) => (props.$isReady ? '#33f' : '#f33')};
+    background: #3f3;
+`;
+
+internals.Indicator = Styled.div`
+    display: flex;
+    align-items: center;
+    height: 50px;
+    padding: 0 20px;
+    background: ${(props) => (props.$isActive ? '#3f3' : '#000')};
+    font-family: monospace;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: ${(props) => (props.$isActive ? '#000' : '#3f3')};
 `;
