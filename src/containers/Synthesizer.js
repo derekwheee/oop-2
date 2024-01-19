@@ -1,4 +1,4 @@
-const { useCallback } = require('react');
+const { useState, useMemo, useCallback } = require('react');
 const T = require('prop-types');
 const KeyboardTransport = require('./KeyboardTransport');
 const Visualizer = require('../components/Visualizer');
@@ -8,7 +8,9 @@ const internals = {};
 
 module.exports = function Synthesizer({ Tone, transport }) {
 
-    const synth = Tone ? new Tone.PolySynth(Tone.Synth).toDestination() : null;
+    const [octave, setOctave] = useState(2);
+
+    const synth = useMemo(() => (Tone ? new Tone.PolySynth(Tone.AMSynth).toDestination() : null), [Tone]);
 
     const attack = useCallback((note, time) => {
 
@@ -27,7 +29,7 @@ module.exports = function Synthesizer({ Tone, transport }) {
     return (
         <>
             {transport === SYNTH_TRANSPORTS.KEYBOARD && (
-                <KeyboardTransport synth={synth} attack={attack} release={release} />
+                <KeyboardTransport synth={synth} octave={octave} onChangeOctave={setOctave} attack={attack} release={release} />
             )}
             <Visualizer context={Tone} synth={synth} />
         </>
