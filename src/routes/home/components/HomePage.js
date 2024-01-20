@@ -4,7 +4,7 @@ const { default: Styled } = require('styled-components');
 
 const internals = {};
 
-module.exports = function HomePage({ onPower, isReady }) {
+module.exports = function HomePage({ onPower, isReady, octave }) {
 
     const { Status, Indicator } = internals;
 
@@ -21,13 +21,19 @@ module.exports = function HomePage({ onPower, isReady }) {
     return (
         <Status $isReady={isReady}>
             <Indicator $isActive={isReady}>Power</Indicator>
+            <Indicator $isActive>{octave > -1 ? '+' : ''}{octave}</Indicator>
+            <Indicator $isActive>AM</Indicator>
+            <Indicator>DST</Indicator>
+            <Indicator>REV</Indicator>
+            <Indicator>DEL</Indicator>
         </Status>
     );
 };
 
 module.exports.propTypes = {
     onPower: T.func,
-    isReady: T.bool
+    isReady: T.bool,
+    octave: T.number
 };
 
 internals.Status = Styled.div`
@@ -48,4 +54,8 @@ internals.Indicator = Styled.div`
     font-weight: bold;
     text-transform: uppercase;
     color: ${(props) => (props.$isActive ? '#000' : '#3f3')};
+
+    &:first-child {
+        margin-right: auto;
+    }
 `;

@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 const { useRef, useEffect, useCallback, useMemo } = require('react');
 const T = require('prop-types');
+const { default: Styled } = require('styled-components');
 
 const internals = {};
 
@@ -8,6 +9,8 @@ const CANVAS_WIDTH = 640;
 const CANVAS_HEIGHT = 480;
 
 module.exports = function Visualizer({ context: Tone, synth }) {
+
+    const { Container } = internals;
 
     const canvasRef = useRef(null);
     const waveform = useMemo(() => new Tone.Waveform(), [Tone]);
@@ -50,7 +53,9 @@ module.exports = function Visualizer({ context: Tone, synth }) {
     }, [waveform]);
 
     return (
-        <canvas ref={canvasRef} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} />
+        <Container>
+            <canvas ref={canvasRef} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} />
+        </Container>
     );
 };
 
@@ -58,3 +63,8 @@ module.exports.propTypes = {
     context: T.object.isRequired,
     synth: T.object.isRequired
 };
+
+internals.Container = Styled.div`
+    display: flex;
+    flex-direction: column;
+`;

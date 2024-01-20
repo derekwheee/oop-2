@@ -1,14 +1,20 @@
-const { useState, useMemo, useCallback } = require('react');
+const { useMemo, useCallback } = require('react');
 const T = require('prop-types');
+const { useMiddleEnd } = require('strange-middle-end');
+const { useSelector } = require('react-redux');
 const KeyboardTransport = require('./KeyboardTransport');
 const Visualizer = require('../components/Visualizer');
 const { SYNTH_TRANSPORTS } = require('../utils/constants');
 
 const internals = {};
 
-module.exports = function Synthesizer({ Tone, transport }) {
+module.exports = function Synthesizer({ Tone }) {
 
-    const [octave, setOctave] = useState(2);
+    const m = useMiddleEnd();
+    const octave = useSelector(m.selectors.synth.getOctave);
+    const transport = useSelector(m.selectors.synth.getTransport);
+
+    const handleChangeOctave = (o) => m.dispatch.synth.setSynthOctave(o);
 
     const synth = useMemo(() => (Tone ? new Tone.PolySynth(Tone.AMSynth).toDestination() : null), [Tone]);
 
@@ -29,7 +35,7 @@ module.exports = function Synthesizer({ Tone, transport }) {
     return (
         <>
             {transport === SYNTH_TRANSPORTS.KEYBOARD && (
-                <KeyboardTransport synth={synth} octave={octave} onChangeOctave={setOctave} attack={attack} release={release} />
+                <KeyboardTransport synth={synth} octave={octave} onChangeOctave={handleChangeOctave} attack={attack} release={release} />
             )}
             <Visualizer context={Tone} synth={synth} />
         </>
@@ -39,6 +45,5 @@ module.exports = function Synthesizer({ Tone, transport }) {
 };
 
 module.exports.propTypes = {
-    Tone: T.object,
-    transport: T.oneOf([SYNTH_TRANSPORTS.KEYBOARD])
+    Tone: T.object
 };
