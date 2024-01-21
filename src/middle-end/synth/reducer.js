@@ -1,22 +1,28 @@
 const MiddleEnd = require('strange-middle-end');
-const { SYNTH_TRANSPORTS, REVERB_MIN_DECAY } = require('../../utils/constants');
+const { SYNTH_TRANSPORTS, REVERB_MIN_DECAY, SYNTH_TYPES } = require('../../utils/constants');
 const {
     SET_CONTEXT,
     SET_TRANSPORT,
     SET_SYNTH,
+    SET_TYPE,
     SET_SYNTH_OCTAVE,
     SET_PITCH_SHIFT,
     SET_DISTORTION,
-    SET_REVERB
+    SET_REVERB,
+    SET_DELAY_TIME,
+    SET_DELAY_FEEDBACK
 } = require('./action-types');
 
 module.exports = MiddleEnd.createReducer({ mutable: true }, {
     synth: null,
+    type: SYNTH_TYPES.MEMBRANE,
     transport: SYNTH_TRANSPORTS.KEYBOARD,
     octave: 2,
     pitchShift: 0,
     distortion: 0,
-    reverb: REVERB_MIN_DECAY
+    reverb: REVERB_MIN_DECAY,
+    delayTime: 0,
+    delayFeedback: 0
 }, {
     [SET_CONTEXT]: (s, { payload: context }) => {
 
@@ -29,6 +35,10 @@ module.exports = MiddleEnd.createReducer({ mutable: true }, {
     [SET_SYNTH]: (s, { payload: synth }) => {
 
         s.synth = synth;
+    },
+    [SET_TYPE]: (s, { payload: type }) => {
+
+        s.type = type;
     },
     [SET_SYNTH_OCTAVE]: (s, { payload: octave }) => {
 
@@ -45,5 +55,13 @@ module.exports = MiddleEnd.createReducer({ mutable: true }, {
     [SET_REVERB]: (s, { payload: reverb }) => {
 
         s.reverb = Number(reverb) || REVERB_MIN_DECAY;
+    },
+    [SET_DELAY_TIME]: (s, { payload: delayTime }) => {
+
+        s.delayTime = delayTime;
+    },
+    [SET_DELAY_FEEDBACK]: (s, { payload: delayFeedback }) => {
+
+        s.delayFeedback = Number(delayFeedback);
     }
 });

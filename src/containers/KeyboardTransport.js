@@ -2,16 +2,19 @@ const { useState, useEffect, useCallback } = require('react');
 const T = require('prop-types');
 const { useMiddleEnd } = require('strange-middle-end');
 const { useSelector } = require('react-redux');
-const { REVERB_MIN_DECAY } = require('../utils/constants');
+const { REVERB_MIN_DECAY, SYNTH_TYPES } = require('../utils/constants');
 
 const internals = {};
 
 module.exports = function Synthesizer({ attack, release, onChangeOctave }) {
 
     const m = useMiddleEnd();
+    const synthType = useSelector(m.selectors.synth.getType);
     const octave = useSelector(m.selectors.synth.getOctave);
     const distortion = useSelector(m.selectors.synth.getDistortion);
     const reverb = useSelector(m.selectors.synth.getReverb);
+    const delayTime = useSelector(m.selectors.synth.getDelayTime);
+    const delayFeedback = useSelector(m.selectors.synth.getDelayFeedback);
 
     const [isKeyDown, setIsKeyDown] = useState({});
 
@@ -25,7 +28,19 @@ module.exports = function Synthesizer({ attack, release, onChangeOctave }) {
             document.removeEventListener('keydown', handleKeyDown);
             document.removeEventListener('keyup', handleKeyUp);
         };
-    }, [attack, release, octave, distortion, reverb, isKeyDown, handleKeyDown, handleKeyUp]);
+    }, [
+        attack,
+        release,
+        synthType,
+        octave,
+        distortion,
+        reverb,
+        delayTime,
+        delayFeedback,
+        isKeyDown,
+        handleKeyDown,
+        handleKeyUp
+    ]);
 
     const toggleDistortion = useCallback(() => {
 
@@ -36,6 +51,22 @@ module.exports = function Synthesizer({ attack, release, onChangeOctave }) {
 
         m.dispatch.synth.setReverb(reverb === 5 ? REVERB_MIN_DECAY : 5);
     }, [m, reverb]);
+
+    const toggleDelay = useCallback(() => {
+
+        m.dispatch.synth.setDelayTime(delayTime ? 0 : '8n');
+        m.dispatch.synth.setDelayFeedback(delayFeedback ? 0 : 0.5);
+    }, [m, delayTime, delayFeedback]);
+
+    const cycleSynthType = useCallback(() => {
+
+        const index = Object.values(SYNTH_TYPES).indexOf(synthType);
+        const length = Object.values(SYNTH_TYPES).length;
+        const next = index + 1 === length ? 0 : index + 1;
+
+        m.dispatch.synth.setType(Object.values(SYNTH_TYPES)[next]);
+        m.dispatch.synth.setSynth(null);
+    }, [m, synthType]);
 
     const handleKeyDown = useCallback(({ key }) => {
 
@@ -70,6 +101,14 @@ module.exports = function Synthesizer({ attack, release, onChangeOctave }) {
             return toggleReverb();
         }
 
+        if (key === '3') {
+            return toggleDelay();
+        }
+
+        if (key === '`') {
+            return cycleSynthType();
+        }
+
         const note = internals.mapKeyToNote(octave)[key];
 
         if (note) {
@@ -77,7 +116,16 @@ module.exports = function Synthesizer({ attack, release, onChangeOctave }) {
         }
 
         setIsKeyDown({ ...isKeyDown, [key]: false });
-    }, [isKeyDown, octave, release, onChangeOctave, toggleDistortion, toggleReverb]);
+    }, [
+        isKeyDown,
+        octave,
+        release,
+        onChangeOctave,
+        toggleDistortion,
+        toggleReverb,
+        toggleDelay,
+        cycleSynthType
+    ]);
 
     return null;
 };
