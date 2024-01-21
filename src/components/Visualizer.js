@@ -14,7 +14,7 @@ module.exports = function Visualizer({ context: Tone, synth }) {
 
     const canvasRef = useRef(null);
     const waveform = useMemo(() => new Tone.Waveform(), [Tone]);
-    synth.connect(waveform);
+    synth?.connect(waveform);
 
     useEffect(() => {
 
