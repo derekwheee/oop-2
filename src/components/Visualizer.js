@@ -61,7 +61,7 @@ module.exports = function Visualizer({ context: Tone, synth }) {
 
 module.exports.propTypes = {
     context: T.object.isRequired,
-    synth: T.object.isRequired
+    synth: T.object
 };
 
 internals.Container = Styled.div`

@@ -1,10 +1,11 @@
 const { useEffect } = require('react');
 const T = require('prop-types');
 const { default: Styled } = require('styled-components');
+const { REVERB_MIN_DECAY } = require('../../../utils/constants');
 
 const internals = {};
 
-module.exports = function HomePage({ onPower, isReady, octave }) {
+module.exports = function HomePage({ onPower, isReady, octave, distortion, reverb }) {
 
     const { Status, Indicator } = internals;
 
@@ -23,8 +24,8 @@ module.exports = function HomePage({ onPower, isReady, octave }) {
             <Indicator $isActive={isReady}>Power</Indicator>
             <Indicator $isActive>{octave > -1 ? '+' : ''}{octave}</Indicator>
             <Indicator $isActive>AM</Indicator>
-            <Indicator>DST</Indicator>
-            <Indicator>REV</Indicator>
+            <Indicator $isActive={distortion > 0}>DST</Indicator>
+            <Indicator $isActive={reverb > REVERB_MIN_DECAY}>REV</Indicator>
             <Indicator>DEL</Indicator>
         </Status>
     );
@@ -33,7 +34,9 @@ module.exports = function HomePage({ onPower, isReady, octave }) {
 module.exports.propTypes = {
     onPower: T.func,
     isReady: T.bool,
-    octave: T.number
+    octave: T.number,
+    distortion: T.number,
+    reverb: T.number
 };
 
 internals.Status = Styled.div`

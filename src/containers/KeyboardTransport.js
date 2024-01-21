@@ -1,24 +1,41 @@
-const { useState, useEffect } = require('react');
+const { useState, useEffect, useCallback } = require('react');
 const T = require('prop-types');
-const { useCallback } = require('react');
+const { useMiddleEnd } = require('strange-middle-end');
+const { useSelector } = require('react-redux');
+const { REVERB_MIN_DECAY } = require('../utils/constants');
 
 const internals = {};
 
-module.exports = function Synthesizer({ attack, release, octave, onChangeOctave }) {
+module.exports = function Synthesizer({ attack, release, onChangeOctave }) {
+
+    const m = useMiddleEnd();
+    const octave = useSelector(m.selectors.synth.getOctave);
+    const distortion = useSelector(m.selectors.synth.getDistortion);
+    const reverb = useSelector(m.selectors.synth.getReverb);
 
     const [isKeyDown, setIsKeyDown] = useState({});
 
     useEffect(() => {
 
         document.addEventListener('keydown', handleKeyDown);
-        document.addEventListener('keyup', kandleKeyUp);
+        document.addEventListener('keyup', handleKeyUp);
 
         return () => {
 
             document.removeEventListener('keydown', handleKeyDown);
-            document.removeEventListener('keyup', kandleKeyUp);
+            document.removeEventListener('keyup', handleKeyUp);
         };
-    }, [attack, release, octave, isKeyDown, handleKeyDown, kandleKeyUp]);
+    }, [attack, release, octave, distortion, reverb, isKeyDown, handleKeyDown, handleKeyUp]);
+
+    const toggleDistortion = useCallback(() => {
+
+        m.dispatch.synth.setDistortion(distortion ? 0 : 1);
+    }, [m, distortion]);
+
+    const toggleReverb = useCallback(() => {
+
+        m.dispatch.synth.setReverb(reverb === 5 ? REVERB_MIN_DECAY : 5);
+    }, [m, reverb]);
 
     const handleKeyDown = useCallback(({ key }) => {
 
@@ -35,7 +52,7 @@ module.exports = function Synthesizer({ attack, release, octave, onChangeOctave 
         }
     }, [isKeyDown, octave, attack]);
 
-    const kandleKeyUp = useCallback(({ key }) => {
+    const handleKeyUp = useCallback(({ key }) => {
 
         if (key === 'ArrowLeft') {
             return onChangeOctave(octave - 1);
@@ -45,6 +62,14 @@ module.exports = function Synthesizer({ attack, release, octave, onChangeOctave 
             return onChangeOctave(octave + 1);
         }
 
+        if (key === '1') {
+            return toggleDistortion();
+        }
+
+        if (key === '2') {
+            return toggleReverb();
+        }
+
         const note = internals.mapKeyToNote(octave)[key];
 
         if (note) {
@@ -52,7 +77,7 @@ module.exports = function Synthesizer({ attack, release, octave, onChangeOctave 
         }
 
         setIsKeyDown({ ...isKeyDown, [key]: false });
-    }, [isKeyDown, octave, release, onChangeOctave]);
+    }, [isKeyDown, octave, release, onChangeOctave, toggleDistortion, toggleReverb]);
 
     return null;
 };
@@ -60,7 +85,6 @@ module.exports = function Synthesizer({ attack, release, octave, onChangeOctave 
 module.exports.propTypes = {
     attack: T.func.isRequired,
     release: T.func.isRequired,
-    octave: T.number.isRequired,
     onChangeOctave: T.func.isRequired
 };
 

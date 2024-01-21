@@ -10,7 +10,6 @@ const internals = {};
 module.exports = function Synthesizer({ Tone }) {
 
     const m = useMiddleEnd();
-    const octave = useSelector(m.selectors.synth.getOctave);
     const transport = useSelector(m.selectors.synth.getTransport);
     const synth = useSelector(m.selectors.synth.getSynth);
 
@@ -40,12 +39,10 @@ module.exports = function Synthesizer({ Tone }) {
     return (
         <>
             {transport === SYNTH_TRANSPORTS.KEYBOARD && (
-                <KeyboardTransport synth={synth} octave={octave} onChangeOctave={handleChangeOctave} attack={attack} release={release} />
+                <KeyboardTransport onChangeOctave={handleChangeOctave} attack={attack} release={release} />
             )}
         </>
     );
-
-    return null;
 };
 
 module.exports.propTypes = {

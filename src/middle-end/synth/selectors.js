@@ -5,3 +5,9 @@ exports.getTransport = ({ synth }) => synth.transport;
 exports.getSynth = ({ synth }) => synth.synth;
 
 exports.getOctave = ({ synth }) => synth.octave;
+
+exports.getPitchShift = ({ synth }) => synth.pitchShift;
+
+exports.getDistortion = ({ synth }) => synth.distortion;
+
+exports.getReverb = ({ synth }) => synth.reverb;
