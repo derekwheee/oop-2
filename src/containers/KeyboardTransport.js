@@ -15,6 +15,8 @@ module.exports = function Synthesizer({ attack, release, onChangeOctave }) {
     const reverb = useSelector(m.selectors.synth.getReverb);
     const delayTime = useSelector(m.selectors.synth.getDelayTime);
     const delayFeedback = useSelector(m.selectors.synth.getDelayFeedback);
+    const vibratoFrequency = useSelector(m.selectors.synth.getVibratoFrequency);
+    const vibratoDepth = useSelector(m.selectors.synth.getVibratoDepth);
 
     const [isKeyDown, setIsKeyDown] = useState({});
 
@@ -37,6 +39,8 @@ module.exports = function Synthesizer({ attack, release, onChangeOctave }) {
         reverb,
         delayTime,
         delayFeedback,
+        vibratoFrequency,
+        vibratoDepth,
         isKeyDown,
         handleKeyDown,
         handleKeyUp
@@ -57,6 +61,12 @@ module.exports = function Synthesizer({ attack, release, onChangeOctave }) {
         m.dispatch.synth.setDelayTime(delayTime ? 0 : '8n');
         m.dispatch.synth.setDelayFeedback(delayFeedback ? 0 : 0.5);
     }, [m, delayTime, delayFeedback]);
+
+    const toggleVibrato = useCallback(() => {
+
+        m.dispatch.synth.setVibratoFrequency(vibratoFrequency ? 0 : 4);
+        m.dispatch.synth.setVibratoDepth(vibratoDepth ? 0 : 1);
+    }, [m, vibratoFrequency, vibratoDepth]);
 
     const cycleSynthType = useCallback(() => {
 
@@ -105,6 +115,10 @@ module.exports = function Synthesizer({ attack, release, onChangeOctave }) {
             return toggleDelay();
         }
 
+        if (key === '4') {
+            return toggleVibrato();
+        }
+
         if (key === '`') {
             return cycleSynthType();
         }
@@ -124,6 +138,7 @@ module.exports = function Synthesizer({ attack, release, onChangeOctave }) {
         toggleDistortion,
         toggleReverb,
         toggleDelay,
+        toggleVibrato,
         cycleSynthType
     ]);
 

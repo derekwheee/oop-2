@@ -18,6 +18,7 @@ module.exports = function HomepageContainer() {
     const distortion = useSelector(m.selectors.synth.getDistortion);
     const reverb = useSelector(m.selectors.synth.getReverb);
     const delayTime = useSelector(m.selectors.synth.getDelayTime);
+    const vibratoFrequency = useSelector(m.selectors.synth.getVibratoFrequency);
 
     const handlePower = async () => {
 
@@ -40,6 +41,7 @@ module.exports = function HomepageContainer() {
                 distortion={distortion}
                 reverb={reverb}
                 delayTime={delayTime}
+                vibratoFrequency={vibratoFrequency}
             />
             <Synthesizer Tone={audioContext} />
             <Effects />

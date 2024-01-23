@@ -17,3 +17,7 @@ exports.getReverb = ({ synth }) => synth.reverb;
 exports.getDelayTime = ({ synth }) => synth.delayTime;
 
 exports.getDelayFeedback = ({ synth }) => synth.delayFeedback;
+
+exports.getVibratoFrequency = ({ synth }) => synth.vibratoFrequency;
+
+exports.getVibratoDepth = ({ synth }) => synth.vibratoDepth;

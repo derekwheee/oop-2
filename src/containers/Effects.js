@@ -14,10 +14,13 @@ module.exports = function Synthesizer() {
     const reverb = useSelector(m.selectors.synth.getReverb);
     const delayTime = useSelector(m.selectors.synth.getDelayTime);
     const delayFeedback = useSelector(m.selectors.synth.getDelayFeedback);
+    const vibratoFrequency = useSelector(m.selectors.synth.getVibratoFrequency);
+    const vibratoDepth = useSelector(m.selectors.synth.getVibratoDepth);
 
     const distortionFx = useMemo(() => (Tone ? new Tone.Distortion(0).toDestination() : null), [Tone]);
     const reverbFx = useMemo(() => (Tone ? new Tone.Reverb(REVERB_MIN_DECAY).toDestination() : null), [Tone]);
     const delayFx = useMemo(() => (Tone ? new Tone.FeedbackDelay(0, 0).toDestination() : null), [Tone]);
+    const vibratoFx = useMemo(() => (Tone ? new Tone.Vibrato(0, 0).toDestination() : null), [Tone]);
 
     useEffect(() => {
 
@@ -25,8 +28,9 @@ module.exports = function Synthesizer() {
             synth.connect(distortionFx);
             synth.connect(reverbFx);
             synth.connect(delayFx);
+            synth.connect(vibratoFx);
         }
-    }, [m, synth, distortionFx, reverbFx, delayFx]);
+    }, [m, synth, distortionFx, reverbFx, delayFx, vibratoFx]);
 
     useEffect(() => {
 
@@ -39,10 +43,30 @@ module.exports = function Synthesizer() {
         }
 
         if (delayFx) {
-            delayFx.delayTime = delayTime;
-            delayFx.feedback = delayFeedback;
+            delayFx.set({
+                delayTime,
+                feedback: delayFeedback
+            });
         }
-    }, [distortionFx, distortion, reverbFx, reverb, delayFx, delayTime, delayFeedback]);
+
+        if (vibratoFx) {
+            vibratoFx.set({
+                frequency: vibratoFrequency,
+                depth: vibratoDepth
+            });
+        }
+    }, [
+        distortionFx,
+        distortion,
+        reverbFx,
+        reverb,
+        delayFx,
+        delayTime,
+        delayFeedback,
+        vibratoFx,
+        vibratoFrequency,
+        vibratoDepth
+    ]);
 
     return null;
 };

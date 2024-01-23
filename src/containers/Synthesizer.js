@@ -15,8 +15,6 @@ module.exports = function Synthesizer({ Tone }) {
     const synthType = useSelector(m.selectors.synth.getType);
     const synthConfig = SYNTH_CONFIGS[synthType || SYNTH_TYPES.AM];
 
-    console.log(synthConfig);
-
     useEffect(() => {
 
         if (Tone && !synth) {

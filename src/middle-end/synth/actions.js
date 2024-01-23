@@ -9,7 +9,9 @@ const {
     SET_DISTORTION,
     SET_REVERB,
     SET_DELAY_TIME,
-    SET_DELAY_FEEDBACK
+    SET_DELAY_FEEDBACK,
+    SET_VIBRATO_FREQUENCY,
+    SET_VIBRATO_DEPTH
 } = require('./action-types');
 
 const internals = {};
@@ -26,7 +28,9 @@ module.exports = (m) => {
         setDistortion: internals.basicAction(SET_DISTORTION),
         setReverb: internals.basicAction(SET_REVERB),
         setDelayTime: internals.basicAction(SET_DELAY_TIME),
-        setDelayFeedback: internals.basicAction(SET_DELAY_FEEDBACK)
+        setDelayFeedback: internals.basicAction(SET_DELAY_FEEDBACK),
+        setVibratoFrequency: internals.basicAction(SET_VIBRATO_FREQUENCY),
+        setVibratoDepth: internals.basicAction(SET_VIBRATO_DEPTH)
     };
 };
 

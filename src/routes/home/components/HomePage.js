@@ -5,7 +5,16 @@ const { REVERB_MIN_DECAY } = require('../../../utils/constants');
 
 const internals = {};
 
-module.exports = function HomePage({ onPower, isReady, synthType, octave, distortion, reverb, delayTime }) {
+module.exports = function HomePage({
+    onPower,
+    isReady,
+    synthType,
+    octave,
+    distortion,
+    reverb,
+    delayTime,
+    vibratoFrequency
+}) {
 
     const { Status, Indicator } = internals;
 
@@ -27,6 +36,7 @@ module.exports = function HomePage({ onPower, isReady, synthType, octave, distor
             <Indicator $isActive={distortion > 0}>DST</Indicator>
             <Indicator $isActive={reverb > REVERB_MIN_DECAY}>REV</Indicator>
             <Indicator $isActive={delayTime !== 0}>DEL</Indicator>
+            <Indicator $isActive={vibratoFrequency !== 0}>VIB</Indicator>
         </Status>
     );
 };
@@ -38,7 +48,8 @@ module.exports.propTypes = {
     octave: T.number,
     distortion: T.number,
     reverb: T.number,
-    delayTime: T.oneOfType([T.number, T.string])
+    delayTime: T.oneOfType([T.number, T.string]),
+    vibratoFrequency: T.number
 };
 
 internals.Status = Styled.div`
