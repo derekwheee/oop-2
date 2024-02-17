@@ -13,7 +13,6 @@ module.exports = function HomepageContainer() {
     const m = useMiddleEnd();
     const audioContext = useSelector(m.selectors.synth.getContext);
     const synth = useSelector(m.selectors.synth.getSynth);
-    const synthType = useSelector(m.selectors.synth.getType);
     const octave = useSelector(m.selectors.synth.getOctave);
     const distortion = useSelector(m.selectors.synth.getDistortion);
     const reverb = useSelector(m.selectors.synth.getReverb);
@@ -36,7 +35,7 @@ module.exports = function HomepageContainer() {
             <HomePage
                 onPower={handlePower}
                 isReady={!!audioContext}
-                synthType={synthType}
+                synth={synth}
                 octave={octave}
                 distortion={distortion}
                 reverb={reverb}

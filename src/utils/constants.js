@@ -1,6 +1,7 @@
 const Tone = require('tone');
 
 exports.SYNTH_TYPES = {
+    OSC: 'osc',
     MONO: 'mono',
     AM: 'am',
     FM: 'fm',
@@ -18,6 +19,10 @@ exports.SYNTH_TRANSPORTS = {
 exports.REVERB_MIN_DECAY = 0.001;
 
 exports.SYNTH_CONFIGS = {
+    [exports.SYNTH_TYPES.OSC]: {
+        synth: Tone.Synth,
+        isPoly: false
+    },
     [exports.SYNTH_TYPES.MONO]: {
         synth: Tone.MonoSynth,
         isPoly: false

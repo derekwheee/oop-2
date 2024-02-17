@@ -8,7 +8,7 @@ const internals = {};
 module.exports = function HomePage({
     onPower,
     isReady,
-    synthType,
+    synth,
     octave,
     distortion,
     reverb,
@@ -32,7 +32,7 @@ module.exports = function HomePage({
         <Status $isReady={isReady}>
             <Indicator $isActive={isReady}>Power</Indicator>
             <Indicator $isActive>{octave > -1 ? '+' : ''}{octave}</Indicator>
-            <Indicator $isActive>{synthType}</Indicator>
+            <Indicator $isActive>{synth?.oscillator?.type}</Indicator>
             <Indicator $isActive={distortion > 0}>DST</Indicator>
             <Indicator $isActive={reverb > REVERB_MIN_DECAY}>REV</Indicator>
             <Indicator $isActive={delayTime !== 0}>DEL</Indicator>
@@ -44,7 +44,7 @@ module.exports = function HomePage({
 module.exports.propTypes = {
     onPower: T.func,
     isReady: T.bool,
-    synthType: T.string,
+    synth: T.object,
     octave: T.number,
     distortion: T.number,
     reverb: T.number,

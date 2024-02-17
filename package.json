@@ -45,7 +45,8 @@
     "strange-middle-end": "0.4.x",
     "strange-router": "2.x.x",
     "styled-components": "5.x.x",
-    "tone": "^14.7.77"
+    "tone": "^14.7.77",
+    "webmidi": "^3.1.8"
   },
   "devDependencies": {
     "@babel/core": "7.x.x",

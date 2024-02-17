@@ -3,6 +3,7 @@ const T = require('prop-types');
 const { useMiddleEnd } = require('strange-middle-end');
 const { useSelector } = require('react-redux');
 const KeyboardTransport = require('./KeyboardTransport');
+const MidiTransport = require('./MidiTransport');
 const { SYNTH_TRANSPORTS, SYNTH_TYPES, SYNTH_CONFIGS } = require('../utils/constants');
 
 const internals = {};
@@ -30,6 +31,11 @@ module.exports = function Synthesizer({ Tone }) {
 
     const handleChangeOctave = (o) => m.dispatch.synth.setSynthOctave(o);
 
+    const handleChangeOscillator = useCallback((patch) => {
+
+        synth.oscillator.set(patch);
+    }, [synth]);
+
     const attack = useCallback((note, time) => {
 
         synth.triggerAttack(note, time || Tone.now());
@@ -51,8 +57,17 @@ module.exports = function Synthesizer({ Tone }) {
 
     return (
         <>
+            <MidiTransport
+                attack={attack}
+                release={release}
+            />
             {transport === SYNTH_TRANSPORTS.KEYBOARD && (
-                <KeyboardTransport onChangeOctave={handleChangeOctave} attack={attack} release={release} />
+                <KeyboardTransport
+                    onChangeOctave={handleChangeOctave}
+                    onChangeOscillator={handleChangeOscillator}
+                    attack={attack}
+                    release={release}
+                />
             )}
         </>
     );
