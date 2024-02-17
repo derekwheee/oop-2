@@ -51,6 +51,11 @@ module.exports = function Synthesizer({ Tone }) {
         }
     }, [Tone, synth, synthConfig]);
 
+    const handleUpdateSynth = useCallback((patch) => {
+
+        synth.set(patch);
+    }, [synth]);
+
     if (!Tone) {
         return null;
     }
@@ -60,6 +65,7 @@ module.exports = function Synthesizer({ Tone }) {
             <MidiTransport
                 attack={attack}
                 release={release}
+                onChangeSynth={handleUpdateSynth}
             />
             {transport === SYNTH_TRANSPORTS.KEYBOARD && (
                 <KeyboardTransport
