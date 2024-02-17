@@ -1,5 +1,7 @@
 const { useState, useEffect, useCallback } = require('react');
 const T = require('prop-types');
+const { useMiddleEnd } = require('strange-middle-end');
+const { useSelector } = require('react-redux');
 
 const internals = {};
 
@@ -10,6 +12,14 @@ module.exports = function MidiTransport({ attack, release, onChangeSynth }) {
     const [midiDevice, setMidiDevice] = useState();
     const [heldNotes, setHeldNotes] = useState([]);
     const [volume, setVolume] = useState(0);
+
+    const m = useMiddleEnd();
+    const distortion = useSelector(m.selectors.synth.getDistortion);
+    const reverb = useSelector(m.selectors.synth.getReverb);
+    const delayTime = useSelector(m.selectors.synth.getDelayTime);
+    const delayFeedback = useSelector(m.selectors.synth.getDelayFeedback);
+    const vibratoFrequency = useSelector(m.selectors.synth.getVibratoFrequency);
+    const vibratoDepth = useSelector(m.selectors.synth.getVibratoDepth);
 
     useEffect(() => {
 
@@ -23,8 +33,6 @@ module.exports = function MidiTransport({ attack, release, onChangeSynth }) {
 
     useEffect(() => {
 
-        console.log(volume);
-
         // TODO: Handle more MIDI messages
 
         midiDevice?.channels[1].addListener('controlchange', handleControlChange);
@@ -37,7 +45,20 @@ module.exports = function MidiTransport({ attack, release, onChangeSynth }) {
             midiDevice?.channels[1].removeListener('noteon', handleNoteOn);
             midiDevice?.channels[1].removeListener('noteoff', handleNoteOff);
         };
-    }, [volume, heldNotes, midiDevice, handleControlChange, handleNoteOn, handleNoteOff]);
+    }, [
+        distortion,
+        reverb,
+        delayTime,
+        delayFeedback,
+        vibratoFrequency,
+        vibratoDepth,
+        volume,
+        heldNotes,
+        midiDevice,
+        handleControlChange,
+        handleNoteOn,
+        handleNoteOff
+    ]);
 
     const connectMidiDevice = useCallback(() => {
 
@@ -72,6 +93,8 @@ module.exports = function MidiTransport({ attack, release, onChangeSynth }) {
 
     const handleControlChange = useCallback(({ controller, data }) => {
 
+        // console.log(controller);
+
         const [, , direction] = data;
 
         const controlMap = {
@@ -84,13 +107,66 @@ module.exports = function MidiTransport({ attack, release, onChangeSynth }) {
                 if (direction < 64) {
                     setVolume(volume - 1);
                 }
+            },
+            generalpurposecontroller2: () => {
+
+                if (direction > 64 && distortion < 1) {
+                    m.dispatch.synth.setDistortion(distortion + 0.1 > 1 ? 1 : distortion + 0.1);
+                }
+
+                if (direction < 64 && distortion > 0) {
+                    m.dispatch.synth.setDistortion(distortion - 0.1 < 0 ? 0 : distortion - 0.1);
+                }
+            },
+            effect1depth: () => {
+
+                if (direction > 64 && reverb < 1) {
+                    m.dispatch.synth.setReverb(reverb + 0.1 > 1 ? 1 : reverb + 0.1);
+                }
+
+                if (direction < 64 && reverb > 0) {
+                    m.dispatch.synth.setReverb(reverb - 0.1 < 0 ? 0.001 : reverb - 0.1);
+                }
+            },
+            controller79: () => {
+
+                m.dispatch.synth.setDelayTime('8n');
+
+                if (direction > 64 && delayFeedback < 1) {
+                    m.dispatch.synth.setDelayFeedback(delayFeedback + 0.1 > 1 ? 1 : delayFeedback + 0.1);
+                }
+
+                if (direction < 64 && delayFeedback > 0) {
+                    m.dispatch.synth.setDelayFeedback(delayFeedback - 0.1 < 0 ? 0 : delayFeedback - 0.1);
+                }
+            },
+            releasetime: () => {
+
+                m.dispatch.synth.setVibratoFrequency(vibratoFrequency ? 0 : 4);
+
+                if (direction > 64 && vibratoDepth < 1) {
+                    m.dispatch.synth.setVibratoDepth(vibratoDepth + 0.1 > 1 ? 1 : vibratoDepth + 0.1);
+                }
+
+                if (direction < 64 && vibratoDepth > 0) {
+                    m.dispatch.synth.setVibratoDepth(vibratoDepth - 0.1 < 0 ? 0 : vibratoDepth - 0.1);
+                }
             }
         };
 
         if (controller.name in controlMap) {
             controlMap[controller.name]();
         }
-    }, [volume]);
+    }, [
+        m,
+        distortion,
+        reverb,
+        // delayTime,
+        delayFeedback,
+        vibratoFrequency,
+        vibratoDepth,
+        volume
+    ]);
 
     return null;
 };

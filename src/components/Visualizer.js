@@ -5,8 +5,8 @@ const { default: Styled } = require('styled-components');
 
 const internals = {};
 
-const CANVAS_WIDTH = 640;
-const CANVAS_HEIGHT = 480;
+const CANVAS_WIDTH = 600;
+const CANVAS_HEIGHT = 200;
 
 module.exports = function Visualizer({ context: Tone, synth }) {
 
@@ -65,6 +65,5 @@ module.exports.propTypes = {
 };
 
 internals.Container = Styled.div`
-    display: flex;
-    flex-direction: column;
+
 `;

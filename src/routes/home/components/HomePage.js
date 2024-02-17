@@ -1,22 +1,23 @@
 const { useEffect } = require('react');
 const T = require('prop-types');
 const { default: Styled } = require('styled-components');
-const { REVERB_MIN_DECAY } = require('../../../utils/constants');
+const Visualizer = require('../../../components/Visualizer');
 
 const internals = {};
 
 module.exports = function HomePage({
     onPower,
     isReady,
+    context,
     synth,
     octave,
     distortion,
     reverb,
-    delayTime,
-    vibratoFrequency
+    delayFeedback,
+    vibratoDepth
 }) {
 
-    const { Status, Indicator } = internals;
+    const { Status, Indicator, Knob } = internals;
 
     useEffect(() => {
 
@@ -29,27 +30,32 @@ module.exports = function HomePage({
     }, [onPower]);
 
     return (
-        <Status $isReady={isReady}>
-            <Indicator $isActive={isReady}>Power</Indicator>
-            <Indicator $isActive>{octave > -1 ? '+' : ''}{octave}</Indicator>
-            <Indicator $isActive>{synth?.oscillator?.type}</Indicator>
-            <Indicator $isActive={distortion > 0}>DST</Indicator>
-            <Indicator $isActive={reverb > REVERB_MIN_DECAY}>REV</Indicator>
-            <Indicator $isActive={delayTime !== 0}>DEL</Indicator>
-            <Indicator $isActive={vibratoFrequency !== 0}>VIB</Indicator>
-        </Status>
+        <>
+            <Status $isReady={isReady}>
+                <Indicator $isActive={isReady}>Power</Indicator>
+                <Indicator $isActive>{octave > -1 ? '+' : ''}{octave}</Indicator>
+                <Indicator $isActive>{synth?.oscillator?.type}</Indicator>
+            </Status>
+            <Visualizer context={context} synth={synth} />
+
+            <Knob label='DST' value={distortion}>{Math.round(distortion * 10) / 10}</Knob>
+            <Knob label='REV' value={reverb}>{Math.round(reverb * 10) / 10}</Knob>
+            <Knob label='DEL' value={delayFeedback}>{Math.round(delayFeedback * 10) / 10}</Knob>
+            <Knob label='VIB' value={vibratoDepth}>{Math.round(vibratoDepth * 10) / 10}</Knob>
+        </>
     );
 };
 
 module.exports.propTypes = {
     onPower: T.func,
     isReady: T.bool,
+    context: T.object,
     synth: T.object,
     octave: T.number,
     distortion: T.number,
     reverb: T.number,
-    delayTime: T.oneOfType([T.number, T.string]),
-    vibratoFrequency: T.number
+    delayFeedback: T.number,
+    vibratoDepth: T.number
 };
 
 internals.Status = Styled.div`
@@ -73,5 +79,25 @@ internals.Indicator = Styled.div`
 
     &:first-child {
         margin-right: auto;
+    }
+`;
+
+internals.Knob = Styled.div`
+    position: relative;
+    width: 60px;
+    padding: 15px 15px 45px;
+    border: 1px solid currentColor;
+    font-family: monospace;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #3f3;
+    text-align: center;
+
+    &:after {
+        content: '${({ label }) => label}';
+        position: absolute;
+        left: 50%;
+        bottom: 10px;
+        transform: translateX(-50%);
     }
 `;

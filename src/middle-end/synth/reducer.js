@@ -58,7 +58,7 @@ module.exports = MiddleEnd.createReducer({ mutable: true }, {
     },
     [SET_REVERB]: (s, { payload: reverb }) => {
 
-        s.reverb = Number(reverb) || REVERB_MIN_DECAY;
+        s.reverb = Number(reverb) < REVERB_MIN_DECAY ? REVERB_MIN_DECAY : Number(reverb);
     },
     [SET_DELAY_TIME]: (s, { payload: delayTime }) => {
 

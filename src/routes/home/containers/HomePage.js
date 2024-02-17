@@ -4,7 +4,6 @@ const Tone = require('tone');
 const HomePage = require('../components/HomePage');
 const Synthesizer = require('../../../containers/Synthesizer');
 const Effects = require('../../../containers/Effects');
-const Visualizer = require('../../../components/Visualizer');
 
 const internals = {};
 
@@ -16,8 +15,8 @@ module.exports = function HomepageContainer() {
     const octave = useSelector(m.selectors.synth.getOctave);
     const distortion = useSelector(m.selectors.synth.getDistortion);
     const reverb = useSelector(m.selectors.synth.getReverb);
-    const delayTime = useSelector(m.selectors.synth.getDelayTime);
-    const vibratoFrequency = useSelector(m.selectors.synth.getVibratoFrequency);
+    const delayFeedback = useSelector(m.selectors.synth.getDelayFeedback);
+    const vibratoDepth = useSelector(m.selectors.synth.getVibratoDepth);
 
     const handlePower = async () => {
 
@@ -35,16 +34,16 @@ module.exports = function HomepageContainer() {
             <HomePage
                 onPower={handlePower}
                 isReady={!!audioContext}
+                context={Tone}
                 synth={synth}
                 octave={octave}
                 distortion={distortion}
                 reverb={reverb}
-                delayTime={delayTime}
-                vibratoFrequency={vibratoFrequency}
+                delayFeedback={delayFeedback}
+                vibratoDepth={vibratoDepth}
             />
             <Synthesizer Tone={audioContext} />
             <Effects />
-            <Visualizer context={Tone} synth={synth} />
         </>
     );
 };
