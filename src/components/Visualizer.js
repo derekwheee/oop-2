@@ -5,8 +5,8 @@ const { default: Styled } = require('styled-components');
 
 const internals = {};
 
-const CANVAS_WIDTH = 600;
-const CANVAS_HEIGHT = 200;
+const CANVAS_WIDTH = 640;
+const CANVAS_HEIGHT = 100;
 
 module.exports = function Visualizer({ context: Tone, synth }) {
 
@@ -41,7 +41,7 @@ module.exports = function Visualizer({ context: Tone, synth }) {
         context.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
         context.fillStyle = 'rgb(0 0 0)';
         context.lineWidth = 2;
-        context.strokeStyle = 'rgb(50 255 50)';
+        context.strokeStyle = 'rgb(255 255 255)';
         context.beginPath();
 
         for (let i = 0; i < CANVAS_WIDTH; ++i) {
@@ -66,4 +66,8 @@ module.exports.propTypes = {
 
 internals.Container = Styled.div`
 
+    canvas {
+        width: 100%;
+        height: 100px;
+    }
 `;

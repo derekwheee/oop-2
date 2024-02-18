@@ -40,4 +40,5 @@ internals.AppContainer = Styled.div`
     display: flex;
     flex-direction: column;
     background: #000;
+    padding: 40px 80px;
 `;
