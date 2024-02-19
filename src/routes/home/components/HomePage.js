@@ -151,7 +151,7 @@ internals.Bank = Styled.div`
 internals.Knob = Styled.div`
     position: relative;
     width: 25%;
-    padding: 15px 15px 45px;
+    padding: 15px 0 45px;
     border: 1px solid currentColor;
     background: #000;
     font-family: monospace;

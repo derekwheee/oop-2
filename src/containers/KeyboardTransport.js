@@ -6,7 +6,7 @@ const { REVERB_MIN_DECAY } = require('../utils/constants');
 
 const internals = {};
 
-module.exports = function Synthesizer({ attack, release, onChangeOctave, onChangeOscillator }) {
+module.exports = function Synthesizer({ attack, release }) {
 
     const m = useMiddleEnd();
     // const synth = useSelector(m.selectors.synth.getSynth);
@@ -65,27 +65,6 @@ module.exports = function Synthesizer({ attack, release, onChangeOctave, onChang
         m.dispatch.synth.setVibratoDepth(vibratoDepth ? 0 : 1);
     }, [m, vibratoFrequency, vibratoDepth]);
 
-    // const cycleSynthType = useCallback(() => {
-
-    //     const index = Object.values(SYNTH_TYPES).indexOf(synthType);
-    //     const length = Object.values(SYNTH_TYPES).length;
-    //     const next = index + 1 === length ? 0 : index + 1;
-
-    //     m.dispatch.synth.setType(Object.values(SYNTH_TYPES)[next]);
-    //     m.dispatch.synth.setSynth(null);
-    // }, [m, synthType]);
-
-    // const cycleOscillatorType = useCallback(() => {
-
-    //     const oscTypes = ['sine', 'square', 'triangle', 'sawtooth'];
-
-    //     const index = oscTypes.indexOf(synth.oscillator.type);
-    //     const length = oscTypes.length;
-    //     const next = index + 1 === length ? 0 : index + 1;
-
-    //     onChangeOscillator({ type: oscTypes[next] });
-    // }, [synth, onChangeOscillator]);
-
     const handleKeyDown = useCallback(({ key }) => {
 
         if (isKeyDown[key]) {
@@ -102,14 +81,6 @@ module.exports = function Synthesizer({ attack, release, onChangeOctave, onChang
     }, [isKeyDown, attack]);
 
     const handleKeyUp = useCallback(({ key }) => {
-
-        if (key === 'ArrowLeft') {
-            return onChangeOctave(2 - 1);
-        }
-
-        if (key === 'ArrowRight') {
-            return onChangeOctave(2 + 1);
-        }
 
         if (key === '1') {
             return toggleDistortion();
@@ -141,8 +112,6 @@ module.exports = function Synthesizer({ attack, release, onChangeOctave, onChang
     }, [
         isKeyDown,
         release,
-        onChangeOctave,
-        // cycleOscillatorType,
         toggleDistortion,
         toggleReverb,
         toggleDelay,
@@ -154,9 +123,7 @@ module.exports = function Synthesizer({ attack, release, onChangeOctave, onChang
 
 module.exports.propTypes = {
     attack: T.func.isRequired,
-    release: T.func.isRequired,
-    onChangeOctave: T.func.isRequired,
-    onChangeOscillator: T.func.isRequired
+    release: T.func.isRequired
 };
 
 internals.mapKeyToNote = (octave) => ({

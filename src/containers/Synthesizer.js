@@ -83,10 +83,11 @@ module.exports = function Synthesizer({ Tone }) {
         voice2.triggerRelease(time || Tone.now());
     }, [Tone, voice1, voice2]);
 
-    const handleUpdateSynth = useCallback((patch) => {
+    const handleUpdateSynth = useCallback(({ frequency }) => {
 
-        voice1.set(patch);
-    }, [voice1]);
+        voice1.set({ frequency: internals.pitchShift(frequency, osc1Octave, osc1Pitch) });
+        voice2.set({ frequency: internals.pitchShift(frequency, osc2Octave, osc2Pitch) });
+    }, [voice1, osc1Octave, osc1Pitch, voice2, osc2Octave, osc2Pitch]);
 
     if (!Tone) {
         return null;
@@ -115,9 +116,21 @@ module.exports.propTypes = {
 
 internals.pitchShift = (note, octave, shift) => {
 
+    if (!note) {
+        return;
+    }
+
     const [ogNote, ogOctave] = note.split(/(\d+)/).filter(Boolean);
     const noteIndex = internals.noteArray.indexOf(ogNote);
-    const newOctave = Number(ogOctave) + octave;
+    let newOctave = Number(ogOctave) + octave;
+
+    if (noteIndex + shift < 0) {
+        --newOctave;
+    }
+
+    if (noteIndex + shift > internals.noteArray.length - 1) {
+        ++newOctave;
+    }
 
     // TODO: I think there's an octave issue here
     const newNote = internals.noteArray[(internals.noteArray.length + noteIndex + shift) % internals.noteArray.length];

@@ -57,6 +57,17 @@ module.exports = function MidiTransport({ attack, release, onChangeSynth }) {
             midiDevice?.channels[1].removeListener('noteoff', handleNoteOff);
         };
     }, [
+        // Oscillator 1
+        osc1Waveform,
+        osc1Octave,
+        osc1Pitch,
+        osc1Volume,
+        // Oscillator 2
+        osc2Waveform,
+        osc2Octave,
+        osc2Pitch,
+        osc2Volume,
+        // Effects
         distortion,
         reverb,
         delayTime,
@@ -171,15 +182,15 @@ module.exports.propTypes = {
 internals.midiMaps = {
     'MINILAB': {
         // Oscillator 1
-        UNASSIGNED_A: 'osc1Waveform',
-        UNASSIGNED_B: 'osc1Octave',
-        UNASSIGNED_C: 'osc1Pitch',
-        UNASSIGNED_D: 'osc1Volume',
+        volumecoarse: 'osc1Waveform',
+        brightness: 'osc1Octave',
+        resonance: 'osc1Pitch',
+        vibratorate: 'osc1Volume',
         // Oscillator 2
-        UNASSIGNED_E: 'osc2Waveform',
-        UNASSIGNED_F: 'osc2Octave',
-        UNASSIGNED_G: 'osc2Pitch',
-        UNASSIGNED_H: 'osc2Volume',
+        vibratodepth: 'osc2Waveform',
+        effect3depth: 'osc2Octave',
+        attacktime: 'osc2Pitch',
+        decaytime: 'osc2Volume',
         // Effects
         generalpurposecontroller2: 'distortion',
         effect1depth: 'reverb',
@@ -191,10 +202,10 @@ internals.midiMaps = {
 internals.reactToControlChange = (direction, comparator, setter) => {
 
     if (direction > 64) {
-        setter(comparator + 0.1);
+        setter(comparator + 0.025);
     }
 
     if (direction < 64) {
-        setter(comparator - 0.1);
+        setter(comparator - 0.025);
     }
 };

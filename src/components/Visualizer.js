@@ -19,7 +19,7 @@ module.exports = function Visualizer({ context: Tone, voice1, voice2 }) {
 
     useEffect(() => {
 
-        const timer = setInterval(updateWaveform, 25);
+        const timer = setInterval(updateWaveform, 100);
 
         return () => {
 

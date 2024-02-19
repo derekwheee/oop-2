@@ -1,4 +1,5 @@
 const MiddleEnd = require('strange-middle-end');
+const { clamp } = require('../../utils/math');
 const { SYNTH_TRANSPORTS, REVERB_MIN_DECAY, SYNTH_TYPES } = require('../../utils/constants');
 const {
     SET_CONTEXT,
@@ -44,11 +45,11 @@ module.exports = MiddleEnd.createReducer({ mutable: true }, {
     },
     [SET_DISTORTION]: (s, { payload: distortion }) => {
 
-        s.distortion = distortion;
+        s.distortion = clamp(Number(distortion), 0, 1);
     },
     [SET_REVERB]: (s, { payload: reverb }) => {
 
-        s.reverb = Number(reverb) < REVERB_MIN_DECAY ? REVERB_MIN_DECAY : Number(reverb);
+        s.reverb = clamp(Number(reverb), REVERB_MIN_DECAY, 1);
     },
     [SET_DELAY_TIME]: (s, { payload: delayTime }) => {
 
@@ -56,7 +57,7 @@ module.exports = MiddleEnd.createReducer({ mutable: true }, {
     },
     [SET_DELAY_FEEDBACK]: (s, { payload: delayFeedback }) => {
 
-        s.delayFeedback = Number(delayFeedback);
+        s.delayFeedback = clamp(Number(delayFeedback), 0, 1);
     },
     [SET_VIBRATO_FREQUENCY]: (s, { payload: vibratoFrequency }) => {
 
@@ -64,6 +65,6 @@ module.exports = MiddleEnd.createReducer({ mutable: true }, {
     },
     [SET_VIBRATO_DEPTH]: (s, { payload: vibratoDepth }) => {
 
-        s.vibratoDepth = vibratoDepth;
+        s.vibratoDepth = clamp(Number(vibratoDepth), 0, 1);
     }
 });
