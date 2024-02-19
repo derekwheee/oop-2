@@ -9,10 +9,11 @@ module.exports = function MidiTransport({ attack, release, onChangeSynth }) {
 
     const WebMidi = window.WebMidi;
 
-    const [midiDevice, setMidiDevice] = useState();
     const [heldNotes, setHeldNotes] = useState([]);
 
     const m = useMiddleEnd();
+
+    const midiDevice = useSelector(m.selectors.synth.getMidiDevice);
 
     // Effects
     const distortion = useSelector(m.selectors.synth.getDistortion);
@@ -87,8 +88,8 @@ module.exports = function MidiTransport({ attack, release, onChangeSynth }) {
         console.log(WebMidi.inputs);
 
         // TODO: Make this a setting?
-        setMidiDevice(WebMidi.inputs[1]);
-    }, [WebMidi]);
+        m.dispatch.synth.setMidiDevice(WebMidi.inputs[1]);
+    }, [m, WebMidi]);
 
     const handleNoteOn = useCallback(({ note }) => {
 

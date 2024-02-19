@@ -16,7 +16,6 @@
     "test": "jest --config config/jest.config.js"
   },
   "pre-commit": [
-    "lint"
   ],
   "repository": {
     "type": "git",

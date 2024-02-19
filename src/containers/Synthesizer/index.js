@@ -4,7 +4,7 @@ const { useMiddleEnd } = require('strange-middle-end');
 const { useSelector } = require('react-redux');
 const KeyboardTransport = require('./KeyboardTransport');
 const MidiTransport = require('./MidiTransport');
-const { SYNTH_TRANSPORTS } = require('../utils/constants');
+const { SYNTH_TRANSPORTS } = require('../../utils/constants');
 
 const internals = {};
 

@@ -3,7 +3,8 @@ const { useSelector } = require('react-redux');
 const Tone = require('tone');
 const HomePage = require('../components/HomePage');
 const Synthesizer = require('../../../containers/Synthesizer');
-const Effects = require('../../../containers/Effects');
+const Effects = require('../../../containers/Synthesizer/Effects');
+const Menu = require('../../../containers/Menu');
 
 const internals = {};
 
@@ -64,6 +65,7 @@ module.exports = function HomepageContainer() {
             />
             <Synthesizer Tone={audioContext} />
             <Effects />
+            <Menu />
         </>
     );
 };

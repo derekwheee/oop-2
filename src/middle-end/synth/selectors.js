@@ -1,3 +1,5 @@
+exports.getMidiDevice = ({ synth }) => synth.midiDevice;
+
 exports.getContext = ({ synth }) => synth.context;
 
 exports.getTransport = ({ synth }) => synth.transport;

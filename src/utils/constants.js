@@ -64,3 +64,8 @@ exports.SYNTH_CONFIGS = {
         isPoly: false
     }
 };
+
+exports.MENUS = {
+    SETTINGS: 'settings',
+    SEQUENCER: 'sequencer'
+};

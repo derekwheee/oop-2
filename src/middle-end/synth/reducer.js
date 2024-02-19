@@ -2,6 +2,7 @@ const MiddleEnd = require('strange-middle-end');
 const { clamp } = require('../../utils/math');
 const { SYNTH_TRANSPORTS, REVERB_MIN_DECAY, SYNTH_TYPES } = require('../../utils/constants');
 const {
+    SET_MIDI_DEVICE,
     SET_CONTEXT,
     SET_TRANSPORT,
     SET_VOICE_1,
@@ -15,7 +16,9 @@ const {
 } = require('./action-types');
 
 module.exports = MiddleEnd.createReducer({ mutable: true }, {
-    synth: null,
+    midiDevice: null,
+    voice1: null,
+    voice2: null,
     type: Object.values(SYNTH_TYPES)[0],
     transport: SYNTH_TRANSPORTS.KEYBOARD,
     octave: 2,
@@ -27,6 +30,10 @@ module.exports = MiddleEnd.createReducer({ mutable: true }, {
     vibratoFrequency: 0,
     vibratoDepth: 0
 }, {
+    [SET_MIDI_DEVICE]: (s, { payload: midiDevice }) => {
+
+        s.midiDevice = midiDevice;
+    },
     [SET_CONTEXT]: (s, { payload: context }) => {
 
         s.context = context;

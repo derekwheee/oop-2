@@ -1,6 +1,7 @@
 const MiddleEnd = require('strange-middle-end');
 
 module.exports = MiddleEnd.createTypes('synth', {
+    SET_MIDI_DEVICE: MiddleEnd.type.simple,
     SET_CONTEXT: MiddleEnd.type.simple,
     SET_TRANSPORT: MiddleEnd.type.simple,
     SET_VOICE_1: MiddleEnd.type.simple,

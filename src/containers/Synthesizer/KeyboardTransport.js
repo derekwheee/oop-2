@@ -2,7 +2,7 @@ const { useState, useEffect, useCallback } = require('react');
 const T = require('prop-types');
 const { useMiddleEnd } = require('strange-middle-end');
 const { useSelector } = require('react-redux');
-const { REVERB_MIN_DECAY } = require('../utils/constants');
+const { REVERB_MIN_DECAY } = require('../../utils/constants');
 
 const internals = {};
 

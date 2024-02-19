@@ -1,5 +1,6 @@
 const MiddleEnd = require('strange-middle-end');
 const {
+    SET_MIDI_DEVICE,
     SET_CONTEXT,
     SET_TRANSPORT,
     SET_VOICE_1,
@@ -17,6 +18,7 @@ const internals = {};
 module.exports = (m) => {
 
     return {
+        setMidiDevice: internals.basicAction(SET_MIDI_DEVICE),
         setContext: internals.basicAction(SET_CONTEXT),
         setTransport: internals.basicAction(SET_TRANSPORT),
         setVoice1: internals.basicAction(SET_VOICE_1),
