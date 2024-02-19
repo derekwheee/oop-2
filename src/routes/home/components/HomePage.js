@@ -41,7 +41,6 @@ module.exports = function HomePage({
         <>
             <Status $isReady={isReady}>
                 <Indicator $isActive={isReady}>Power</Indicator>
-                <Indicator $isActive>{voice1?.oscillator?.type}</Indicator>
             </Status>
             <Visualizer context={context} voice1={voice1} voice2={voice2} />
 

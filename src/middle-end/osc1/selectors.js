@@ -7,4 +7,4 @@ exports.getOctave = ({ osc1 }) => [osc1.octave, Math.round(scale(osc1.octave, [0
 
 exports.getPitch = ({ osc1 }) => [osc1.pitch, Math.round(scale(osc1.pitch, [0, 1], [-7, 7]))];
 
-exports.getVolume = ({ osc1 }) => [osc1.volume, Math.round(scale(osc1.volume, [0, 1], [-6, 6]))];
+exports.getVolume = ({ osc1 }) => [osc1.volume, Math.round(scale(osc1.volume, [0, 1], [-12, 12]))];

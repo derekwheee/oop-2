@@ -118,6 +118,8 @@ internals.pitchShift = (note, octave, shift) => {
     const [ogNote, ogOctave] = note.split(/(\d+)/).filter(Boolean);
     const noteIndex = internals.noteArray.indexOf(ogNote);
     const newOctave = Number(ogOctave) + octave;
+
+    // TODO: I think there's an octave issue here
     const newNote = internals.noteArray[(internals.noteArray.length + noteIndex + shift) % internals.noteArray.length];
 
     return `${newNote}${newOctave}`;

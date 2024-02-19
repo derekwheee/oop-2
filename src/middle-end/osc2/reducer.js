@@ -11,7 +11,7 @@ module.exports = MiddleEnd.createReducer({ mutable: true }, {
     waveform: 0.75,
     octave: 0.6,
     pitch: 0.5,
-    volume: 1
+    volume: 0.75
 }, {
     [SET_WAVEFORM]: (s, { payload: waveform }) => {
 
