@@ -21,6 +21,11 @@ module.exports = function MidiTransport({ attack, release, onChangeSynth }) {
     const vibratoFrequency = useSelector(m.selectors.synth.getVibratoFrequency);
     const vibratoDepth = useSelector(m.selectors.synth.getVibratoDepth);
 
+    const osc1Waveform = useSelector(m.selectors.osc1.getWaveform);
+    const osc1Octave = useSelector(m.selectors.osc1.getOctave);
+    const osc1Pitch = useSelector(m.selectors.osc1.getPitch);
+    const osc1Volume = useSelector(m.selectors.osc1.getVolume);
+
     useEffect(() => {
 
         WebMidi.enable();
@@ -32,8 +37,6 @@ module.exports = function MidiTransport({ attack, release, onChangeSynth }) {
     }, [WebMidi, connectMidiDevice]);
 
     useEffect(() => {
-
-        // TODO: Handle more MIDI messages
 
         midiDevice?.channels[1].addListener('controlchange', handleControlChange);
         midiDevice?.channels[1].addListener('noteon', handleNoteOn);
@@ -98,72 +101,96 @@ module.exports = function MidiTransport({ attack, release, onChangeSynth }) {
         const [, , direction] = data;
 
         const controlMap = {
-            volumecoarse: () => {
+            volume: () => {
 
-                if (direction > 64) {
-                    setVolume(volume + 1);
-                }
-
-                if (direction < 64) {
-                    setVolume(volume - 1);
-                }
+                internals.reactToControlChange(
+                    direction,
+                    setVolume(volume + 1),
+                    setVolume(volume - 1)
+                );
             },
-            generalpurposecontroller2: () => {
+            osc1Waveform: () => {
 
-                if (direction > 64 && distortion < 1) {
-                    m.dispatch.synth.setDistortion(distortion + 0.1 > 1 ? 1 : distortion + 0.1);
-                }
-
-                if (direction < 64 && distortion > 0) {
-                    m.dispatch.synth.setDistortion(distortion - 0.1 < 0 ? 0 : distortion - 0.1);
-                }
+                internals.reactToControlChange(
+                    direction,
+                    m.dispatch.osc1.setWaveform(osc1Waveform + 0.1 > 1 ? 1 : osc1Waveform + 0.1),
+                    m.dispatch.osc1.setWaveform(osc1Waveform - 0.1 < 0 ? 0 : osc1Waveform - 0.1)
+                );
             },
-            effect1depth: () => {
+            osc1Octave: () => {
 
-                if (direction > 64 && reverb < 1) {
-                    m.dispatch.synth.setReverb(reverb + 0.1 > 1 ? 1 : reverb + 0.1);
-                }
-
-                if (direction < 64 && reverb > 0) {
-                    m.dispatch.synth.setReverb(reverb - 0.1 < 0 ? 0.001 : reverb - 0.1);
-                }
+                internals.reactToControlChange(
+                    direction,
+                    m.dispatch.osc1.setOctave(osc1Octave + 0.1 > 1 ? 1 : osc1Octave + 0.1),
+                    m.dispatch.osc1.setOctave(osc1Octave - 0.1 < 0 ? 0 : osc1Octave - 0.1)
+                );
             },
-            controller79: () => {
+            osc1Pitch: () => {
 
-                m.dispatch.synth.setDelayTime('8n');
-
-                if (direction > 64 && delayFeedback < 1) {
-                    m.dispatch.synth.setDelayFeedback(delayFeedback + 0.1 > 1 ? 1 : delayFeedback + 0.1);
-                }
-
-                if (direction < 64 && delayFeedback > 0) {
-                    m.dispatch.synth.setDelayFeedback(delayFeedback - 0.1 < 0 ? 0 : delayFeedback - 0.1);
-                }
+                internals.reactToControlChange(
+                    direction,
+                    m.dispatch.osc1.setPitch(osc1Pitch + 0.1 > 1 ? 1 : osc1Pitch + 0.1),
+                    m.dispatch.osc1.setPitch(osc1Pitch - 0.1 < 0 ? 0 : osc1Pitch - 0.1)
+                );
             },
-            releasetime: () => {
+            osc1Volume: () => {
 
-                m.dispatch.synth.setVibratoFrequency(vibratoFrequency ? 0 : 4);
+                internals.reactToControlChange(
+                    direction,
+                    m.dispatch.osc1.setVolume(osc1Volume + 0.1 > 1 ? 1 : osc1Volume + 0.1),
+                    m.dispatch.osc1.setVolume(osc1Volume - 0.1 < 0 ? 0 : osc1Volume - 0.1)
+                );
+            },
+            distortion: () => {
 
-                if (direction > 64 && vibratoDepth < 1) {
-                    m.dispatch.synth.setVibratoDepth(vibratoDepth + 0.1 > 1 ? 1 : vibratoDepth + 0.1);
-                }
+                internals.reactToControlChange(
+                    direction,
+                    m.dispatch.synth.setDistortion(distortion + 0.1 > 1 ? 1 : distortion + 0.1),
+                    m.dispatch.synth.setDistortion(distortion - 0.1 < 0 ? 0 : distortion - 0.1)
+                );
+            },
+            reverb: () => {
 
-                if (direction < 64 && vibratoDepth > 0) {
-                    m.dispatch.synth.setVibratoDepth(vibratoDepth - 0.1 < 0 ? 0 : vibratoDepth - 0.1);
-                }
+                internals.reactToControlChange(
+                    direction,
+                    m.dispatch.synth.setReverb(reverb + 0.1 > 1 ? 1 : reverb + 0.1),
+                    m.dispatch.synth.setReverb(reverb - 0.1 < 0 ? 0.001 : reverb - 0.1)
+                );
+            },
+            delay: () => {
+
+                m.dispatch.synth.setDelayTime(delayFeedback - 0.1 <= 0 ? 0 : '8n');
+
+                internals.reactToControlChange(
+                    direction,
+                    m.dispatch.synth.setDelayFeedback(delayFeedback + 0.1 > 1 ? 1 : delayFeedback + 0.1),
+                    m.dispatch.synth.setDelayFeedback(delayFeedback - 0.1 < 0 ? 0 : delayFeedback - 0.1)
+                );
+            },
+            vibrato: () => {
+
+                m.dispatch.synth.setVibratoFrequency(vibratoDepth - 0.1 <= 0 ? 0 : 4);
+
+                internals.reactToControlChange(
+                    direction,
+                    m.dispatch.synth.setVibratoDepth(vibratoDepth + 0.1 > 1 ? 1 : vibratoDepth + 0.1),
+                    m.dispatch.synth.setVibratoDepth(vibratoDepth - 0.1 < 0 ? 0 : vibratoDepth - 0.1)
+                );
             }
         };
 
-        if (controller.name in controlMap) {
-            controlMap[controller.name]();
+        if (controller.name in internals.midiMaps.MINILAB) {
+            controlMap[internals.midiMaps.MINILAB[controller.name]]();
         }
     }, [
         m,
+        osc1Waveform,
+        osc1Octave,
+        osc1Pitch,
+        osc1Volume,
         distortion,
         reverb,
-        // delayTime,
         delayFeedback,
-        vibratoFrequency,
         vibratoDepth,
         volume
     ]);
@@ -175,4 +202,25 @@ module.exports.propTypes = {
     attack: T.func.isRequired,
     release: T.func.isRequired,
     onChangeSynth: T.func.isRequired
+};
+
+internals.midiMaps = {
+    'MINILAB': {
+        volumecoarse: 'volume',
+        generalpurposecontroller2: 'distortion',
+        effect1depth: 'reverb',
+        controller79: 'delay',
+        releasetime: 'vibrato'
+    }
+};
+
+internals.reactToControlChange = (direction, increaseFn, decreaseFn) => {
+
+    if (direction > 64) {
+        increaseFn();
+    }
+
+    if (direction < 64) {
+        decreaseFn();
+    }
 };

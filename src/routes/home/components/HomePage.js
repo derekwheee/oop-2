@@ -10,6 +10,7 @@ module.exports = function HomePage({
     isReady,
     context,
     synth,
+    osc1,
     octave,
     distortion,
     reverb,
@@ -39,16 +40,16 @@ module.exports = function HomePage({
 
             <KnobBanks>
                 <Bank label='OSC 1'>
-                    <Knob label='WFM' value={distortion}>{Math.round(distortion * 10) / 10}</Knob>
-                    <Knob label='OCT' value={reverb}>{Math.round(reverb * 10) / 10}</Knob>
-                    <Knob label='PCH' value={delayFeedback}>{Math.round(delayFeedback * 10) / 10}</Knob>
-                    <Knob label='VOL' value={vibratoDepth}>{Math.round(vibratoDepth * 10) / 10}</Knob>
+                    <Knob label='WFM' value={osc1?.waveform}>{osc1?.waveform.substring(0, 3)}</Knob>
+                    <Knob label='OCT' value={osc1?.octave}>{osc1?.octave}</Knob>
+                    <Knob label='PCH' value={osc1?.pitch}>{osc1?.pitch}</Knob>
+                    <Knob label='VOL' value={osc1?.volume}>{Math.round(osc1?.volume * 10) / 10}</Knob>
                 </Bank>
                 <Bank label='OSC 2'>
-                    <Knob label='WFM' value={distortion}>{Math.round(distortion * 10) / 10}</Knob>
-                    <Knob label='OCT' value={reverb}>{Math.round(reverb * 10) / 10}</Knob>
-                    <Knob label='PCH' value={delayFeedback}>{Math.round(delayFeedback * 10) / 10}</Knob>
-                    <Knob label='VOL' value={vibratoDepth}>{Math.round(vibratoDepth * 10) / 10}</Knob>
+                    <Knob label='WFM' value={osc1?.waveform}>{osc1?.waveform.substring(0, 3)}</Knob>
+                    <Knob label='OCT' value={osc1?.octave}>{osc1?.octave}</Knob>
+                    <Knob label='PCH' value={osc1?.pitch}>{osc1?.pitch}</Knob>
+                    <Knob label='VOL' value={osc1?.volume}>{Math.round(osc1?.volume * 10) / 10}</Knob>
                 </Bank>
                 <Bank label='Filter'>
                     <Knob label='FRQ' value={distortion}>{Math.round(distortion * 10) / 10}</Knob>
@@ -72,6 +73,7 @@ module.exports.propTypes = {
     isReady: T.bool,
     context: T.object,
     synth: T.object,
+    osc1: T.object,
     octave: T.number,
     distortion: T.number,
     reverb: T.number,

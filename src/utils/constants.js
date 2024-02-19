@@ -12,8 +12,16 @@ exports.SYNTH_TYPES = {
     METAL: 'metal'
 };
 
+exports.OSCILLATOR_WAVEFORMS = {
+    SAWTOOTH: 'sawtooth',
+    TRIANGLE: 'triangle',
+    SQUARE: 'square',
+    SINE: 'sine'
+};
+
 exports.SYNTH_TRANSPORTS = {
-    KEYBOARD: 'keyboard'
+    KEYBOARD: 'keyboard',
+    MIDI: 'midi'
 };
 
 exports.REVERB_MIN_DECAY = 0.001;

@@ -18,6 +18,13 @@ module.exports = function HomepageContainer() {
     const delayFeedback = useSelector(m.selectors.synth.getDelayFeedback);
     const vibratoDepth = useSelector(m.selectors.synth.getVibratoDepth);
 
+    const osc1 = {
+        waveform: useSelector(m.selectors.osc1.getWaveform),
+        octave: useSelector(m.selectors.osc1.getOctave),
+        pitch: useSelector(m.selectors.osc1.getPitch),
+        volume: useSelector(m.selectors.osc1.getVolume)
+    };
+
     const handlePower = async () => {
 
         if (audioContext) {
@@ -28,6 +35,8 @@ module.exports = function HomepageContainer() {
 
         m.dispatch.synth.setContext(Tone);
     };
+
+    console.log(osc1);
 
     return (
         <>
@@ -41,6 +50,7 @@ module.exports = function HomepageContainer() {
                 reverb={reverb}
                 delayFeedback={delayFeedback}
                 vibratoDepth={vibratoDepth}
+                osc1={osc1}
             />
             <Synthesizer Tone={audioContext} />
             <Effects />

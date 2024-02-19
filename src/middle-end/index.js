@@ -3,6 +3,7 @@ const Redux = require('redux');
 const ReduxDevtools = require('redux-devtools-extension/logOnlyInProduction');
 
 const Synth = require('./synth');
+const Osc1 = require('./osc1');
 const Router = require('./router');
 
 exports.create = (options = {}) => {
@@ -10,6 +11,7 @@ exports.create = (options = {}) => {
     const middleEnd = MiddleEnd.create({
         mods: () => ({
             synth: Synth(middleEnd, options),
+            osc1: Osc1(middleEnd, options),
             router: Router(middleEnd, options)
         }),
         createStore: (reducer, { router }) => {
