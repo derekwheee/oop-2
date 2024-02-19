@@ -16,6 +16,12 @@ module.exports = function Synthesizer({ Tone }) {
     const synthType = useSelector(m.selectors.synth.getType);
     const synthConfig = SYNTH_CONFIGS[synthType || SYNTH_TYPES.AM];
 
+    // Oscillator 1
+    const osc1Waveform = useSelector(m.selectors.osc1.getWaveform);
+    const osc1Octave = useSelector(m.selectors.osc1.getOctave);
+    const osc1Pitch = useSelector(m.selectors.osc1.getPitch);
+    const osc1Volume = useSelector(m.selectors.osc1.getVolume);
+
     useEffect(() => {
 
         if (Tone && !synth) {
@@ -29,6 +35,21 @@ module.exports = function Synthesizer({ Tone }) {
         }
     }, [m, Tone, synth, synthConfig]);
 
+    useEffect(() => {
+
+        if (synth && osc1Waveform !== synth.oscillator.type) {
+            synth.oscillator.set({ type: osc1Waveform });
+        }
+
+        if (synth) {
+            synth.volume.value = osc1Volume;
+        }
+    }, [
+        synth,
+        osc1Waveform,
+        osc1Volume
+    ]);
+
     const handleChangeOctave = (o) => m.dispatch.synth.setSynthOctave(o);
 
     const handleChangeOscillator = useCallback((patch) => {
@@ -38,18 +59,13 @@ module.exports = function Synthesizer({ Tone }) {
 
     const attack = useCallback((note, time) => {
 
-        synth.triggerAttack(note, time || Tone.now());
+        synth.triggerAttack(internals.pitchShift(note, osc1Octave, osc1Pitch), time || Tone.now());
+    }, [Tone, synth, osc1Octave, osc1Pitch]);
+
+    const release = useCallback((time) => {
+
+        synth.triggerRelease(time || Tone.now());
     }, [Tone, synth]);
-
-    const release = useCallback((note, time) => {
-
-        if (synthConfig.isPoly) {
-            synth.triggerRelease(note, time || Tone.now());
-        }
-        else {
-            synth.triggerRelease(time || Tone.now());
-        }
-    }, [Tone, synth, synthConfig]);
 
     const handleUpdateSynth = useCallback((patch) => {
 
@@ -82,3 +98,28 @@ module.exports = function Synthesizer({ Tone }) {
 module.exports.propTypes = {
     Tone: T.object
 };
+
+internals.pitchShift = (note, octave, shift) => {
+
+    const [ogNote, ogOctave] = note.split(/(\d+)/).filter(Boolean);
+    const noteIndex = internals.noteArray.indexOf(ogNote);
+    const newOctave = Number(ogOctave) + octave;
+    const newNote = internals.noteArray[(internals.noteArray.length + noteIndex + shift) % internals.noteArray.length];
+
+    return `${newNote}${newOctave}`;
+};
+
+internals.noteArray = [
+    'C',
+    'C#',
+    'D',
+    'D#',
+    'E',
+    'F',
+    'F#',
+    'G',
+    'G#',
+    'A',
+    'A#',
+    'B'
+];

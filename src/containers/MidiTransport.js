@@ -21,10 +21,10 @@ module.exports = function MidiTransport({ attack, release, onChangeSynth }) {
     const vibratoFrequency = useSelector(m.selectors.synth.getVibratoFrequency);
     const vibratoDepth = useSelector(m.selectors.synth.getVibratoDepth);
 
-    const osc1Waveform = useSelector(m.selectors.osc1.getWaveform);
-    const osc1Octave = useSelector(m.selectors.osc1.getOctave);
-    const osc1Pitch = useSelector(m.selectors.osc1.getPitch);
-    const osc1Volume = useSelector(m.selectors.osc1.getVolume);
+    const osc1Waveform = useSelector(m.selectors.osc1.getRawWaveform);
+    const osc1Octave = useSelector(m.selectors.osc1.getRawOctave);
+    const osc1Pitch = useSelector(m.selectors.osc1.getRawPitch);
+    const osc1Volume = useSelector(m.selectors.osc1.getRawVolume);
 
     useEffect(() => {
 

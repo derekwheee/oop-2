@@ -9,7 +9,7 @@ const internals = {};
 module.exports = function Synthesizer({ attack, release, onChangeOctave, onChangeOscillator }) {
 
     const m = useMiddleEnd();
-    const synth = useSelector(m.selectors.synth.getSynth);
+    // const synth = useSelector(m.selectors.synth.getSynth);
     const synthType = useSelector(m.selectors.synth.getType);
     const octave = useSelector(m.selectors.synth.getOctave);
     const distortion = useSelector(m.selectors.synth.getDistortion);
@@ -79,16 +79,16 @@ module.exports = function Synthesizer({ attack, release, onChangeOctave, onChang
     //     m.dispatch.synth.setSynth(null);
     // }, [m, synthType]);
 
-    const cycleOscillatorType = useCallback(() => {
+    // const cycleOscillatorType = useCallback(() => {
 
-        const oscTypes = ['sine', 'square', 'triangle', 'sawtooth'];
+    //     const oscTypes = ['sine', 'square', 'triangle', 'sawtooth'];
 
-        const index = oscTypes.indexOf(synth.oscillator.type);
-        const length = oscTypes.length;
-        const next = index + 1 === length ? 0 : index + 1;
+    //     const index = oscTypes.indexOf(synth.oscillator.type);
+    //     const length = oscTypes.length;
+    //     const next = index + 1 === length ? 0 : index + 1;
 
-        onChangeOscillator({ type: oscTypes[next] });
-    }, [synth, onChangeOscillator]);
+    //     onChangeOscillator({ type: oscTypes[next] });
+    // }, [synth, onChangeOscillator]);
 
     const handleKeyDown = useCallback(({ key }) => {
 
@@ -131,14 +131,14 @@ module.exports = function Synthesizer({ attack, release, onChangeOctave, onChang
             return toggleVibrato();
         }
 
-        if (key === '`') {
-            return cycleOscillatorType();
-        }
+        // if (key === '`') {
+        //     return cycleOscillatorType();
+        // }
 
         const note = internals.mapKeyToNote(octave)[key];
 
         if (note) {
-            release(note);
+            release();
         }
 
         setIsKeyDown({ ...isKeyDown, [key]: false });
@@ -147,7 +147,7 @@ module.exports = function Synthesizer({ attack, release, onChangeOctave, onChang
         octave,
         release,
         onChangeOctave,
-        cycleOscillatorType,
+        // cycleOscillatorType,
         toggleDistortion,
         toggleReverb,
         toggleDelay,

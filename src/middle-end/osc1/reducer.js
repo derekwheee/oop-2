@@ -10,8 +10,8 @@ const internals = {};
 
 module.exports = MiddleEnd.createReducer({ mutable: true }, {
     waveform: 0,
-    octave: 2,
-    pitch: 0,
+    octave: 0.333,
+    pitch: 0.5,
     volume: 1
 }, {
     [SET_WAVEFORM]: (s, { payload: waveform }) => {
@@ -20,11 +20,11 @@ module.exports = MiddleEnd.createReducer({ mutable: true }, {
     },
     [SET_OCTAVE]: (s, { payload: octave }) => {
 
-        s.octave = internals.clamp(Number(octave), -2, 4);
+        s.octave = internals.clamp(Number(octave), 0, 1);
     },
     [SET_PITCH]: (s, { payload: pitch }) => {
 
-        s.pitch = internals.clamp(Number(pitch), -7, 7);
+        s.pitch = internals.clamp(Number(pitch), 0, 1);
     },
     [SET_VOLUME]: (s, { payload: volume }) => {
 
