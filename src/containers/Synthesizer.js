@@ -71,13 +71,6 @@ module.exports = function Synthesizer({ Tone }) {
         osc2Volume
     ]);
 
-    const handleChangeOctave = (o) => m.dispatch.synth.setSynthOctave(o);
-
-    const handleChangeOscillator = useCallback((patch) => {
-
-        voice1.oscillator.set(patch);
-    }, [voice1]);
-
     const attack = useCallback((note, time) => {
 
         voice1.triggerAttack(internals.pitchShift(note, osc1Octave, osc1Pitch), time || Tone.now());
@@ -108,8 +101,6 @@ module.exports = function Synthesizer({ Tone }) {
             />
             {transport === SYNTH_TRANSPORTS.KEYBOARD && (
                 <KeyboardTransport
-                    onChangeOctave={handleChangeOctave}
-                    onChangeOscillator={handleChangeOscillator}
                     attack={attack}
                     release={release}
                 />

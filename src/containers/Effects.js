@@ -3,13 +3,12 @@ const { useMiddleEnd } = require('strange-middle-end');
 const { useSelector } = require('react-redux');
 const { REVERB_MIN_DECAY } = require('../utils/constants');
 
-const internals = {};
-
 module.exports = function Synthesizer() {
 
     const m = useMiddleEnd();
     const Tone = useSelector(m.selectors.synth.getContext);
     const voice1 = useSelector(m.selectors.synth.getVoice1);
+    const voice2 = useSelector(m.selectors.synth.getVoice2);
     const distortion = useSelector(m.selectors.synth.getDistortion);
     const reverb = useSelector(m.selectors.synth.getReverb);
     const delayTime = useSelector(m.selectors.synth.getDelayTime);
@@ -30,7 +29,14 @@ module.exports = function Synthesizer() {
             voice1.connect(delayFx);
             voice1.connect(vibratoFx);
         }
-    }, [m, voice1, distortionFx, reverbFx, delayFx, vibratoFx]);
+
+        if (voice2 && distortionFx) {
+            voice2.connect(distortionFx);
+            voice2.connect(reverbFx);
+            voice2.connect(delayFx);
+            voice2.connect(vibratoFx);
+        }
+    }, [m, voice1, voice2, distortionFx, reverbFx, delayFx, vibratoFx]);
 
     useEffect(() => {
 
