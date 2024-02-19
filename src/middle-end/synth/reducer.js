@@ -3,10 +3,8 @@ const { SYNTH_TRANSPORTS, REVERB_MIN_DECAY, SYNTH_TYPES } = require('../../utils
 const {
     SET_CONTEXT,
     SET_TRANSPORT,
-    SET_SYNTH,
-    SET_TYPE,
-    SET_SYNTH_OCTAVE,
-    SET_PITCH_SHIFT,
+    SET_VOICE_1,
+    SET_VOICE_2,
     SET_DISTORTION,
     SET_REVERB,
     SET_DELAY_TIME,
@@ -36,21 +34,13 @@ module.exports = MiddleEnd.createReducer({ mutable: true }, {
 
         s.transport = transport;
     },
-    [SET_SYNTH]: (s, { payload: synth }) => {
+    [SET_VOICE_1]: (s, { payload: voice1 }) => {
 
-        s.synth = synth;
+        s.voice1 = voice1;
     },
-    [SET_TYPE]: (s, { payload: type }) => {
+    [SET_VOICE_2]: (s, { payload: voice2 }) => {
 
-        s.type = type;
-    },
-    [SET_SYNTH_OCTAVE]: (s, { payload: octave }) => {
-
-        s.octave = octave;
-    },
-    [SET_PITCH_SHIFT]: (s, { payload: pitchShift }) => {
-
-        s.pitchShift = pitchShift;
+        s.voice2 = voice2;
     },
     [SET_DISTORTION]: (s, { payload: distortion }) => {
 

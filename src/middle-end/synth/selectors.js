@@ -2,13 +2,9 @@ exports.getContext = ({ synth }) => synth.context;
 
 exports.getTransport = ({ synth }) => synth.transport;
 
-exports.getSynth = ({ synth }) => synth.synth;
+exports.getVoice1 = ({ synth }) => synth.voice1;
 
-exports.getType = ({ synth }) => synth.type;
-
-exports.getOctave = ({ synth }) => synth.octave;
-
-exports.getPitchShift = ({ synth }) => synth.pitchShift;
+exports.getVoice2 = ({ synth }) => synth.voice2;
 
 exports.getDistortion = ({ synth }) => synth.distortion;
 

@@ -10,8 +10,6 @@ module.exports = function Synthesizer({ attack, release, onChangeOctave, onChang
 
     const m = useMiddleEnd();
     // const synth = useSelector(m.selectors.synth.getSynth);
-    const synthType = useSelector(m.selectors.synth.getType);
-    const octave = useSelector(m.selectors.synth.getOctave);
     const distortion = useSelector(m.selectors.synth.getDistortion);
     const reverb = useSelector(m.selectors.synth.getReverb);
     const delayTime = useSelector(m.selectors.synth.getDelayTime);
@@ -34,8 +32,6 @@ module.exports = function Synthesizer({ attack, release, onChangeOctave, onChang
     }, [
         attack,
         release,
-        synthType,
-        octave,
         distortion,
         reverb,
         delayTime,
@@ -98,21 +94,21 @@ module.exports = function Synthesizer({ attack, release, onChangeOctave, onChang
 
         setIsKeyDown({ ...isKeyDown, [key]: true });
 
-        const note = internals.mapKeyToNote(octave)[key];
+        const note = internals.mapKeyToNote(2)[key];
 
         if (note) {
             attack(note);
         }
-    }, [isKeyDown, octave, attack]);
+    }, [isKeyDown, attack]);
 
     const handleKeyUp = useCallback(({ key }) => {
 
         if (key === 'ArrowLeft') {
-            return onChangeOctave(octave - 1);
+            return onChangeOctave(2 - 1);
         }
 
         if (key === 'ArrowRight') {
-            return onChangeOctave(octave + 1);
+            return onChangeOctave(2 + 1);
         }
 
         if (key === '1') {
@@ -135,7 +131,7 @@ module.exports = function Synthesizer({ attack, release, onChangeOctave, onChang
         //     return cycleOscillatorType();
         // }
 
-        const note = internals.mapKeyToNote(octave)[key];
+        const note = internals.mapKeyToNote(2)[key];
 
         if (note) {
             release();
@@ -144,7 +140,6 @@ module.exports = function Synthesizer({ attack, release, onChangeOctave, onChang
         setIsKeyDown({ ...isKeyDown, [key]: false });
     }, [
         isKeyDown,
-        octave,
         release,
         onChangeOctave,
         // cycleOscillatorType,

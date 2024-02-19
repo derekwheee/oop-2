@@ -9,7 +9,7 @@ module.exports = function Synthesizer() {
 
     const m = useMiddleEnd();
     const Tone = useSelector(m.selectors.synth.getContext);
-    const synth = useSelector(m.selectors.synth.getSynth);
+    const voice1 = useSelector(m.selectors.synth.getVoice1);
     const distortion = useSelector(m.selectors.synth.getDistortion);
     const reverb = useSelector(m.selectors.synth.getReverb);
     const delayTime = useSelector(m.selectors.synth.getDelayTime);
@@ -24,13 +24,13 @@ module.exports = function Synthesizer() {
 
     useEffect(() => {
 
-        if (synth && distortionFx) {
-            synth.connect(distortionFx);
-            synth.connect(reverbFx);
-            synth.connect(delayFx);
-            synth.connect(vibratoFx);
+        if (voice1 && distortionFx) {
+            voice1.connect(distortionFx);
+            voice1.connect(reverbFx);
+            voice1.connect(delayFx);
+            voice1.connect(vibratoFx);
         }
-    }, [m, synth, distortionFx, reverbFx, delayFx, vibratoFx]);
+    }, [m, voice1, distortionFx, reverbFx, delayFx, vibratoFx]);
 
     useEffect(() => {
 

@@ -9,13 +9,20 @@ module.exports = function HomePage({
     onPower,
     isReady,
     context,
-    synth,
-    osc1,
-    octave,
+    voice1,
+    voice2,
     distortion,
     reverb,
     delayFeedback,
-    vibratoDepth
+    vibratoDepth,
+    osc1Waveform,
+    osc1Octave,
+    osc1Pitch,
+    osc1Volume,
+    osc2Waveform,
+    osc2Octave,
+    osc2Pitch,
+    osc2Volume
 }) {
 
     const { Status, Indicator, KnobBanks, Bank, Knob } = internals;
@@ -34,22 +41,22 @@ module.exports = function HomePage({
         <>
             <Status $isReady={isReady}>
                 <Indicator $isActive={isReady}>Power</Indicator>
-                <Indicator $isActive>{synth?.oscillator?.type}</Indicator>
+                <Indicator $isActive>{voice1?.oscillator?.type}</Indicator>
             </Status>
-            <Visualizer context={context} synth={synth} />
+            <Visualizer context={context} voice1={voice1} voice2={voice2} />
 
             <KnobBanks>
                 <Bank label='OSC 1'>
-                    <Knob label='WFM' value={osc1?.waveform}>{osc1?.waveform.substring(0, 3)}</Knob>
-                    <Knob label='OCT' value={osc1?.octave}>{osc1?.octave}</Knob>
-                    <Knob label='PCH' value={osc1?.pitch}>{osc1?.pitch}</Knob>
-                    <Knob label='VOL' value={osc1?.volume}>{Math.round(osc1?.volume * 10) / 10}</Knob>
+                    <Knob label='WFM' value={osc1Waveform}>{osc1Waveform.substring(0, 3)}</Knob>
+                    <Knob label='OCT' value={osc1Octave}>{osc1Octave}</Knob>
+                    <Knob label='PCH' value={osc1Pitch}>{osc1Pitch}</Knob>
+                    <Knob label='VOL' value={osc1Volume}>{Math.round(osc1Volume * 10) / 10}</Knob>
                 </Bank>
                 <Bank label='OSC 2'>
-                    <Knob label='WFM' value={osc1?.waveform}>{osc1?.waveform.substring(0, 3)}</Knob>
-                    <Knob label='OCT' value={osc1?.octave}>{osc1?.octave}</Knob>
-                    <Knob label='PCH' value={osc1?.pitch}>{osc1?.pitch}</Knob>
-                    <Knob label='VOL' value={osc1?.volume}>{Math.round(osc1?.volume * 10) / 10}</Knob>
+                    <Knob label='WFM' value={osc2Waveform}>{osc2Waveform.substring(0, 3)}</Knob>
+                    <Knob label='OCT' value={osc2Octave}>{osc2Octave}</Knob>
+                    <Knob label='PCH' value={osc2Pitch}>{osc2Pitch}</Knob>
+                    <Knob label='VOL' value={osc2Volume}>{Math.round(osc2Volume * 10) / 10}</Knob>
                 </Bank>
                 <Bank label='Filter'>
                     <Knob label='FRQ' value={distortion}>{Math.round(distortion * 10) / 10}</Knob>
@@ -72,13 +79,20 @@ module.exports.propTypes = {
     onPower: T.func,
     isReady: T.bool,
     context: T.object,
-    synth: T.object,
-    osc1: T.object,
-    octave: T.number,
+    voice1: T.object,
+    voice2: T.object,
     distortion: T.number,
     reverb: T.number,
     delayFeedback: T.number,
-    vibratoDepth: T.number
+    vibratoDepth: T.number,
+    osc1Waveform: T.string,
+    osc1Octave: T.number,
+    osc1Pitch: T.number,
+    osc1Volume: T.number,
+    osc2Waveform: T.string,
+    osc2Octave: T.number,
+    osc2Pitch: T.number,
+    osc2Volume: T.number
 };
 
 internals.Status = Styled.div`

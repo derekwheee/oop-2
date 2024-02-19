@@ -8,13 +8,14 @@ const internals = {};
 const CANVAS_WIDTH = 640;
 const CANVAS_HEIGHT = 100;
 
-module.exports = function Visualizer({ context: Tone, synth }) {
+module.exports = function Visualizer({ context: Tone, voice1, voice2 }) {
 
     const { Container } = internals;
 
     const canvasRef = useRef(null);
     const waveform = useMemo(() => new Tone.Waveform(), [Tone]);
-    synth?.connect(waveform);
+    voice1?.connect(waveform);
+    voice2?.connect(waveform);
 
     useEffect(() => {
 
@@ -61,7 +62,8 @@ module.exports = function Visualizer({ context: Tone, synth }) {
 
 module.exports.propTypes = {
     context: T.object.isRequired,
-    synth: T.object
+    voice1: T.object,
+    voice2: T.object
 };
 
 internals.Container = Styled.div`

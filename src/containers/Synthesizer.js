@@ -4,7 +4,7 @@ const { useMiddleEnd } = require('strange-middle-end');
 const { useSelector } = require('react-redux');
 const KeyboardTransport = require('./KeyboardTransport');
 const MidiTransport = require('./MidiTransport');
-const { SYNTH_TRANSPORTS, SYNTH_TYPES, SYNTH_CONFIGS } = require('../utils/constants');
+const { SYNTH_TRANSPORTS } = require('../utils/constants');
 
 const internals = {};
 
@@ -12,65 +12,88 @@ module.exports = function Synthesizer({ Tone }) {
 
     const m = useMiddleEnd();
     const transport = useSelector(m.selectors.synth.getTransport);
-    const synth = useSelector(m.selectors.synth.getSynth);
-    const synthType = useSelector(m.selectors.synth.getType);
-    const synthConfig = SYNTH_CONFIGS[synthType || SYNTH_TYPES.AM];
+    const voice1 = useSelector(m.selectors.synth.getVoice1);
+    const voice2 = useSelector(m.selectors.synth.getVoice2);
 
     // Oscillator 1
-    const osc1Waveform = useSelector(m.selectors.osc1.getWaveform);
-    const osc1Octave = useSelector(m.selectors.osc1.getOctave);
-    const osc1Pitch = useSelector(m.selectors.osc1.getPitch);
-    const osc1Volume = useSelector(m.selectors.osc1.getVolume);
+    const [, osc1Waveform] = useSelector(m.selectors.osc1.getWaveform);
+    const [, osc1Octave] = useSelector(m.selectors.osc1.getOctave);
+    const [, osc1Pitch] = useSelector(m.selectors.osc1.getPitch);
+    const [, osc1Volume] = useSelector(m.selectors.osc1.getVolume);
+
+    // Oscillator 2
+    const [, osc2Waveform] = useSelector(m.selectors.osc2.getWaveform);
+    const [, osc2Octave] = useSelector(m.selectors.osc2.getOctave);
+    const [, osc2Pitch] = useSelector(m.selectors.osc2.getPitch);
+    const [, osc2Volume] = useSelector(m.selectors.osc2.getVolume);
 
     useEffect(() => {
 
-        if (Tone && !synth) {
+        if (Tone && !voice1) {
 
-            if (synthConfig.isPoly) {
-                m.dispatch.synth.setSynth(new Tone.PolySynth(synthConfig.synth).toDestination());
-            }
-            else {
-                m.dispatch.synth.setSynth(new synthConfig.synth().toDestination());
-            }
-        }
-    }, [m, Tone, synth, synthConfig]);
-
-    useEffect(() => {
-
-        if (synth && osc1Waveform !== synth.oscillator.type) {
-            synth.oscillator.set({ type: osc1Waveform });
+            m.dispatch.synth.setVoice1(new Tone.Synth().toDestination());
         }
 
-        if (synth) {
-            synth.volume.value = osc1Volume;
+        if (voice1 && osc1Waveform !== voice1.oscillator.type) {
+            voice1.oscillator.set({ type: osc1Waveform });
+        }
+
+        if (voice1) {
+            voice1.volume.value = osc1Volume;
         }
     }, [
-        synth,
+        m,
+        Tone,
+        voice1,
         osc1Waveform,
         osc1Volume
+    ]);
+
+    useEffect(() => {
+
+        if (Tone && !voice2) {
+
+            m.dispatch.synth.setVoice2(new Tone.Synth().toDestination());
+        }
+
+        if (voice2 && osc2Waveform !== voice2.oscillator.type) {
+            voice2.oscillator.set({ type: osc2Waveform });
+        }
+
+        if (voice2) {
+            voice2.volume.value = osc2Volume;
+        }
+    }, [
+        m,
+        Tone,
+        voice2,
+        osc2Waveform,
+        osc2Volume
     ]);
 
     const handleChangeOctave = (o) => m.dispatch.synth.setSynthOctave(o);
 
     const handleChangeOscillator = useCallback((patch) => {
 
-        synth.oscillator.set(patch);
-    }, [synth]);
+        voice1.oscillator.set(patch);
+    }, [voice1]);
 
     const attack = useCallback((note, time) => {
 
-        synth.triggerAttack(internals.pitchShift(note, osc1Octave, osc1Pitch), time || Tone.now());
-    }, [Tone, synth, osc1Octave, osc1Pitch]);
+        voice1.triggerAttack(internals.pitchShift(note, osc1Octave, osc1Pitch), time || Tone.now());
+        voice2.triggerAttack(internals.pitchShift(note, osc2Octave, osc2Pitch), time || Tone.now());
+    }, [Tone, voice1, osc1Octave, osc1Pitch, voice2, osc2Octave, osc2Pitch]);
 
     const release = useCallback((time) => {
 
-        synth.triggerRelease(time || Tone.now());
-    }, [Tone, synth]);
+        voice1.triggerRelease(time || Tone.now());
+        voice2.triggerRelease(time || Tone.now());
+    }, [Tone, voice1, voice2]);
 
     const handleUpdateSynth = useCallback((patch) => {
 
-        synth.set(patch);
-    }, [synth]);
+        voice1.set(patch);
+    }, [voice1]);
 
     if (!Tone) {
         return null;
