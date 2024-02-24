@@ -7,7 +7,7 @@ const { MENUS } = require('../../utils/constants');
 
 const internals = {};
 
-module.exports = function MidiTransport({ lock, selectedMenu, onSelectMenu }) {
+module.exports = function MidiTransport({ lock, selectedMenu, onSelectMenu, onKnobChange }) {
 
     const WebMidi = window.WebMidi;
 
@@ -27,16 +27,16 @@ module.exports = function MidiTransport({ lock, selectedMenu, onSelectMenu }) {
 
     useEffect(() => {
 
-        midiDevice?.addListener('controlchange', handleControlChange);
+        midiDevice?.addListener('controlchange', routeControlChange);
 
         return () => {
 
-            midiDevice?.removeListener('controlchange', handleControlChange);
+            midiDevice?.removeListener('controlchange', routeControlChange);
         };
     }, [
         midiDevice,
         selectedMenu,
-        handleControlChange
+        routeControlChange
     ]);
 
     const connectMidiDevice = useCallback(() => {
@@ -48,18 +48,24 @@ module.exports = function MidiTransport({ lock, selectedMenu, onSelectMenu }) {
         m.dispatch.synth.setMidiDevice(WebMidi.inputs[2].channels[1]);
     }, [m, WebMidi]);
 
-    const handleControlChange = useCallback(({ controller, data }) => {
+    const routeControlChange = useCallback(({ controller, data }) => {
 
         const [, , value] = data;
 
-        if (!!value || !(controller.name in internals.midiMaps.MINILAB)) {
-            return;
+        if (value && controller.name in internals.menus.MINILAB) {
+            handleChangeMenu({ controller, data }, selectedMenu);
         }
+        else {
+            onKnobChange({ controller, data });
+        }
+    }, [selectedMenu, onKnobChange, handleChangeMenu]);
 
-        const nextMenu = internals.midiMaps.MINILAB[controller.name];
+    const handleChangeMenu = useCallback(({ controller }, selected) => {
 
-        onSelectMenu(selectedMenu === nextMenu ? null : nextMenu);
-    }, [selectedMenu, onSelectMenu]);
+        const nextMenu = internals.menus.MINILAB[controller.name];
+
+        onSelectMenu(selected === nextMenu ? null : nextMenu);
+    }, [onSelectMenu]);
 
     return null;
 };
@@ -67,10 +73,11 @@ module.exports = function MidiTransport({ lock, selectedMenu, onSelectMenu }) {
 module.exports.propTypes = {
     lock: T.string,
     selectedMenu: T.string,
-    onSelectMenu: T.func.isRequired
+    onSelectMenu: T.func.isRequired,
+    onKnobChange: T.func.isRequired
 };
 
-internals.midiMaps = {
+internals.menus = {
     'MINILAB': {
         controller22: MENUS.SETTINGS,
         controller23: MENUS.SEQUENCER

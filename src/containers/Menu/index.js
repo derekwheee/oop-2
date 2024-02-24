@@ -1,4 +1,4 @@
-const { useState, useEffect } = require('react');
+const { useState, useEffect, useCallback } = require('react');
 const { useMiddleEnd } = require('strange-middle-end');
 const { useSelector } = require('react-redux');
 const { MENUS, TRANSPORT_LOCK } = require('../../utils/constants');
@@ -16,18 +16,21 @@ module.exports = function HomepageContainer() {
 
     const transportLock = useSelector(m.selectors.midi.getTransportLock);
 
+    const midiInputSetting = useSelector(m.selectors.settings.getMidiInput);
+    const midiChannelSetting = useSelector(m.selectors.settings.getMidiChannel);
+
     useEffect(() => {
 
-        if (selectedMenu === MENUS.SETTINGS) {
+        if (selectedMenu === MENUS.SETTINGS && transportLock !== TRANSPORT_LOCK.SETTINGS) {
             m.dispatch.midi.setTransportLock(TRANSPORT_LOCK.SETTINGS);
         }
-        else if (selectedMenu === MENUS.SEQUENCER) {
+        else if (selectedMenu === MENUS.SEQUENCER && transportLock !== TRANSPORT_LOCK.SEQUENCER) {
             m.dispatch.midi.setTransportLock(TRANSPORT_LOCK.SEQUENCER);
         }
-        else {
+        else if (selectedMenu === null && transportLock !== TRANSPORT_LOCK.UNLOCKED) {
             m.dispatch.midi.setTransportLock(TRANSPORT_LOCK.UNLOCKED);
         }
-    }, [m, selectedMenu]);
+    }, [m, selectedMenu, transportLock]);
 
     const handleSelectMenu = (menu) => {
 
@@ -36,11 +39,35 @@ module.exports = function HomepageContainer() {
         }
     };
 
+    const handleKnobChange = useCallback(({ controller, data }) => {
+
+        console.log(transportLock);
+
+        if (transportLock === TRANSPORT_LOCK.SETTINGS) {
+            console.log(controller);
+            console.log(data);
+        }
+
+        if (transportLock === TRANSPORT_LOCK.SEQUENCER) {
+
+        }
+    }, [transportLock]);
+
     return (
         <>
-            {selectedMenu === MENUS.SETTINGS && <Settings />}
+            {selectedMenu === MENUS.SETTINGS && (
+                <Settings
+                    midiInput={midiInputSetting}
+                    midiChannel={midiChannelSetting}
+                />
+            )}
             {selectedMenu === MENUS.SEQUENCER && <Sequencer />}
-            <MidiTransport lock={transportLock} selectedMenu={selectedMenu} onSelectMenu={handleSelectMenu} />
+            <MidiTransport
+                lock={transportLock}
+                selectedMenu={selectedMenu}
+                onSelectMenu={handleSelectMenu}
+                onKnobChange={handleKnobChange}
+            />
         </>
     );
 };

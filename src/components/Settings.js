@@ -1,25 +1,27 @@
 /* eslint-disable no-unused-vars */
 // const { useRef, useEffect, useCallback, useMemo } = require('react');
-// const T = require('prop-types');
+const T = require('prop-types');
 const { default: Styled } = require('styled-components');
 
 const internals = {};
 
-module.exports = function Settings() {
+module.exports = function Settings({ midiInput, midiChannel }) {
 
-    const { Container, Title, Backdrop, Input } = internals;
+    const { Container, Title, Backdrop, Input, Heading } = internals;
 
-    console.log(window.WebMidi.inputs[0].midiInput);
+    const inputs = window.WebMidi.inputs;
 
     return (
         <>
             <Container>
                 <Title>Settings</Title>
                 <div>
-                    {window.WebMidi.inputs.map((input) => (
-
-                        <Input>{input.name}</Input>
-                    ))}
+                    <Heading>MIDI Input</Heading>
+                    <Input>{inputs[midiInput]?.name}</Input>
+                </div>
+                <div>
+                    <Heading>MIDI Channel</Heading>
+                    <Input>{midiChannel}</Input>
                 </div>
             </Container>
             <Backdrop />
@@ -28,6 +30,8 @@ module.exports = function Settings() {
 };
 
 module.exports.propTypes = {
+    midiInput: T.number,
+    midiChannel: T.number
 };
 
 internals.Container = Styled.div`
@@ -78,4 +82,12 @@ internals.Backdrop = Styled.div`
 
 internals.Input = Styled.div`
     font-size: 1em;
+`;
+
+internals.Heading = Styled.div`
+    display: inline-block;
+    margin: 0.5em 0;
+    padding: 0 0.5em;
+    background: #fff;
+    color: #000;
 `;
