@@ -7,7 +7,7 @@ const { MENUS } = require('../../utils/constants');
 
 const internals = {};
 
-module.exports = function MidiTransport({ selectedMenu, onSelectMenu }) {
+module.exports = function MidiTransport({ lock, selectedMenu, onSelectMenu }) {
 
     const WebMidi = window.WebMidi;
 
@@ -27,11 +27,11 @@ module.exports = function MidiTransport({ selectedMenu, onSelectMenu }) {
 
     useEffect(() => {
 
-        midiDevice?.channels[1].addListener('controlchange', handleControlChange);
+        midiDevice?.addListener('controlchange', handleControlChange);
 
         return () => {
 
-            midiDevice?.channels[1].removeListener('controlchange', handleControlChange);
+            midiDevice?.removeListener('controlchange', handleControlChange);
         };
     }, [
         midiDevice,
@@ -45,7 +45,7 @@ module.exports = function MidiTransport({ selectedMenu, onSelectMenu }) {
         console.log(WebMidi.inputs);
 
         // TODO: Make this a setting?
-        m.dispatch.synth.setMidiDevice(WebMidi.inputs[1]);
+        m.dispatch.synth.setMidiDevice(WebMidi.inputs[2].channels[1]);
     }, [m, WebMidi]);
 
     const handleControlChange = useCallback(({ controller, data }) => {
@@ -65,6 +65,7 @@ module.exports = function MidiTransport({ selectedMenu, onSelectMenu }) {
 };
 
 module.exports.propTypes = {
+    lock: T.string,
     selectedMenu: T.string,
     onSelectMenu: T.func.isRequired
 };

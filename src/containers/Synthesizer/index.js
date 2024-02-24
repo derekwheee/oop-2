@@ -73,8 +73,8 @@ module.exports = function Synthesizer({ Tone }) {
 
     const attack = useCallback((note, time) => {
 
-        voice1.triggerAttack(internals.pitchShift(note, osc1Octave, osc1Pitch), time || Tone.now());
-        voice2.triggerAttack(internals.pitchShift(note, osc2Octave, osc2Pitch), time || Tone.now());
+        voice1?.triggerAttack(internals.pitchShift(note, osc1Octave, osc1Pitch), time || Tone.now());
+        voice2?.triggerAttack(internals.pitchShift(note, osc2Octave, osc2Pitch), time || Tone.now());
     }, [Tone, voice1, osc1Octave, osc1Pitch, voice2, osc2Octave, osc2Pitch]);
 
     const release = useCallback((time) => {

@@ -2,6 +2,7 @@ const { useState, useEffect, useCallback } = require('react');
 const T = require('prop-types');
 const { useMiddleEnd } = require('strange-middle-end');
 const { useSelector } = require('react-redux');
+const { TRANSPORT_LOCK } = require('../../utils/constants');
 
 const internals = {};
 
@@ -14,6 +15,7 @@ module.exports = function MidiTransport({ attack, release, onChangeSynth }) {
     const m = useMiddleEnd();
 
     const midiDevice = useSelector(m.selectors.synth.getMidiDevice);
+    const transportLock = useSelector(m.selectors.midi.getTransportLock);
 
     // Effects
     const distortion = useSelector(m.selectors.synth.getDistortion);
@@ -47,17 +49,20 @@ module.exports = function MidiTransport({ attack, release, onChangeSynth }) {
 
     useEffect(() => {
 
-        midiDevice?.channels[1].addListener('controlchange', handleControlChange);
-        midiDevice?.channels[1].addListener('noteon', handleNoteOn);
-        midiDevice?.channels[1].addListener('noteoff', handleNoteOff);
+        if (transportLock === TRANSPORT_LOCK.UNLOCKED) {
+            midiDevice?.addListener('controlchange', handleControlChange);
+            midiDevice?.addListener('noteon', handleNoteOn);
+            midiDevice?.addListener('noteoff', handleNoteOff);
+        }
 
         return () => {
 
-            midiDevice?.channels[1].removeListener('controlchange', handleControlChange);
-            midiDevice?.channels[1].removeListener('noteon', handleNoteOn);
-            midiDevice?.channels[1].removeListener('noteoff', handleNoteOff);
+            midiDevice?.removeListener('controlchange', handleControlChange);
+            midiDevice?.removeListener('noteon', handleNoteOn);
+            midiDevice?.removeListener('noteoff', handleNoteOff);
         };
     }, [
+        transportLock,
         // Oscillator 1
         osc1Waveform,
         osc1Octave,
@@ -88,7 +93,7 @@ module.exports = function MidiTransport({ attack, release, onChangeSynth }) {
         console.log(WebMidi.inputs);
 
         // TODO: Make this a setting?
-        m.dispatch.synth.setMidiDevice(WebMidi.inputs[1]);
+        m.dispatch.synth.setMidiDevice(WebMidi.inputs[2].channels[1]);
     }, [m, WebMidi]);
 
     const handleNoteOn = useCallback(({ note }) => {
@@ -102,7 +107,7 @@ module.exports = function MidiTransport({ attack, release, onChangeSynth }) {
     const handleNoteOff = useCallback(({ note }) => {
 
         const noteString = `${note.name}${note.accidental || ''}${note.octave}`;
-        const shouldRelease = !midiDevice.channels[1].notesState.find(Boolean);
+        const shouldRelease = !midiDevice?.notesState.find(Boolean);
 
         if (shouldRelease) {
             setHeldNotes([]);

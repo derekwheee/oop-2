@@ -7,12 +7,20 @@ const internals = {};
 
 module.exports = function Settings() {
 
-    const { Container, Title, Backdrop } = internals;
+    const { Container, Title, Backdrop, Input } = internals;
+
+    console.log(window.WebMidi.inputs[0].midiInput);
 
     return (
         <>
             <Container>
                 <Title>Settings</Title>
+                <div>
+                    {window.WebMidi.inputs.map((input) => (
+
+                        <Input>{input.name}</Input>
+                    ))}
+                </div>
             </Container>
             <Backdrop />
         </>
@@ -66,4 +74,8 @@ internals.Backdrop = Styled.div`
       var(--g1),var(--g1) var(--s) var(--s),
       var(--g2),var(--g2) var(--s) var(--s) rgba(90, 90, 90, 1);
     background-size: calc(2*var(--s)) calc(2*var(--s));
+`;
+
+internals.Input = Styled.div`
+    font-size: 1em;
 `;

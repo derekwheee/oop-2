@@ -69,3 +69,9 @@ exports.MENUS = {
     SETTINGS: 'settings',
     SEQUENCER: 'sequencer'
 };
+
+exports.TRANSPORT_LOCK = {
+    UNLOCKED: 'unlocked',
+    SETTINGS: 'settings',
+    SEQUENCER: 'sequencer'
+};
