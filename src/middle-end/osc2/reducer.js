@@ -8,9 +8,9 @@ const {
 } = require('./action-types');
 
 module.exports = MiddleEnd.createReducer({ mutable: true }, {
-    waveform: 0.75,
-    octave: 0.6,
-    pitch: 0.5,
+    waveform: 0.333,
+    octave: 0.333,
+    pitch: 0.8,
     volume: 0.75
 }, {
     [SET_WAVEFORM]: (s, { payload: waveform }) => {

@@ -31,6 +31,12 @@ module.exports = function HomepageContainer() {
     const [, osc2Pitch] = useSelector(m.selectors.osc2.getPitch);
     const [, osc2Volume] = useSelector(m.selectors.osc2.getVolume);
 
+    // Envelope
+    const [, envAttack] = useSelector(m.selectors.envelope.getAttack);
+    const [, envDecay] = useSelector(m.selectors.envelope.getDecay);
+    const [, envSustain] = useSelector(m.selectors.envelope.getSustain);
+    const [, envRelease] = useSelector(m.selectors.envelope.getRelease);
+
     const handlePower = async () => {
 
         if (audioContext) {
@@ -62,6 +68,10 @@ module.exports = function HomepageContainer() {
                 osc2Octave={osc2Octave}
                 osc2Pitch={osc2Pitch}
                 osc2Volume={osc2Volume}
+                envAttack={envAttack}
+                envDecay={envDecay}
+                envSustain={envSustain}
+                envRelease={envRelease}
             />
             <Synthesizer Tone={audioContext} />
             <Effects />

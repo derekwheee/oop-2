@@ -5,6 +5,6 @@ exports.getWaveform = ({ osc2 }) => [osc2.waveform, Object.values(OSCILLATOR_WAV
 
 exports.getOctave = ({ osc2 }) => [osc2.octave, Math.round(scale(osc2.octave, [0, 1], [-3, 3]))];
 
-exports.getPitch = ({ osc2 }) => [osc2.pitch, Math.round(scale(osc2.pitch, [0, 1], [-7, 7]))];
+exports.getPitch = ({ osc2 }) => [osc2.pitch, Math.round(scale(osc2.pitch, [0, 1], [-12, 12]))];
 
 exports.getVolume = ({ osc2 }) => [osc2.volume, Math.round(scale(osc2.volume, [0, 1], [-12, 12]))];

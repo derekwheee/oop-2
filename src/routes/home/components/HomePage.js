@@ -22,7 +22,11 @@ module.exports = function HomePage({
     osc2Waveform,
     osc2Octave,
     osc2Pitch,
-    osc2Volume
+    osc2Volume,
+    envAttack,
+    envDecay,
+    envSustain,
+    envRelease
 }) {
 
     const { Status, Indicator, KnobBanks, Bank, Knob } = internals;
@@ -57,11 +61,11 @@ module.exports = function HomePage({
                     <Knob label='PCH' value={osc2Pitch}>{osc2Pitch}</Knob>
                     <Knob label='VOL' value={osc2Volume}>{Math.round(osc2Volume * 10) / 10}</Knob>
                 </Bank>
-                <Bank label='Filter'>
-                    <Knob label='FRQ' value={distortion}>{Math.round(distortion * 10) / 10}</Knob>
-                    <Knob label='EMP' value={reverb}>{Math.round(reverb * 10) / 10}</Knob>
-                    <Knob label='AMT' value={delayFeedback}>{Math.round(delayFeedback * 10) / 10}</Knob>
-                    <Knob label='VOL' value={vibratoDepth}>{Math.round(vibratoDepth * 10) / 10}</Knob>
+                <Bank label='Envelope'>
+                    <Knob label='ATT' value={envAttack}>{Math.round(envAttack * 10) / 10}</Knob>
+                    <Knob label='DEC' value={envDecay}>{Math.round(envDecay * 10) / 10}</Knob>
+                    <Knob label='SUS' value={envSustain}>{Math.round(envSustain * 10) / 10}</Knob>
+                    <Knob label='REL' value={envRelease}>{Math.round(envRelease * 10) / 10}</Knob>
                 </Bank>
                 <Bank label='Effects'>
                     <Knob label='DST' value={distortion}>{Math.round(distortion * 10) / 10}</Knob>
@@ -91,7 +95,11 @@ module.exports.propTypes = {
     osc2Waveform: T.string,
     osc2Octave: T.number,
     osc2Pitch: T.number,
-    osc2Volume: T.number
+    osc2Volume: T.number,
+    envAttack: T.number,
+    envDecay: T.number,
+    envSustain: T.number,
+    envRelease: T.number
 };
 
 internals.Status = Styled.div`

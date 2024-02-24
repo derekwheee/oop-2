@@ -37,6 +37,13 @@ module.exports = function MidiTransport({ attack, release, onChangeSynth }) {
     const [osc2Pitch] = useSelector(m.selectors.osc2.getPitch);
     const [osc2Volume] = useSelector(m.selectors.osc2.getVolume);
 
+    // Envelope
+
+    const [envAttack] = useSelector(m.selectors.envelope.getAttack);
+    const [envDecay] = useSelector(m.selectors.envelope.getDecay);
+    const [envSustain] = useSelector(m.selectors.envelope.getSustain);
+    const [envRelease] = useSelector(m.selectors.envelope.getRelease);
+
     useEffect(() => {
 
         WebMidi.enable();
@@ -73,6 +80,11 @@ module.exports = function MidiTransport({ attack, release, onChangeSynth }) {
         osc2Octave,
         osc2Pitch,
         osc2Volume,
+        // Envelope
+        envAttack,
+        envDecay,
+        envSustain,
+        envRelease,
         // Effects
         distortion,
         reverb,
@@ -136,6 +148,11 @@ module.exports = function MidiTransport({ attack, release, onChangeSynth }) {
             osc2Octave: () => internals.reactToControlChange(direction, osc2Octave, m.dispatch.osc2.setOctave),
             osc2Pitch: () => internals.reactToControlChange(direction, osc2Pitch, m.dispatch.osc2.setPitch),
             osc2Volume: () => internals.reactToControlChange(direction, osc2Volume, m.dispatch.osc2.setVolume),
+            // Envelope
+            envAttack: () => internals.reactToControlChange(direction, envAttack, m.dispatch.envelope.setAttack),
+            envDecay: () => internals.reactToControlChange(direction, envDecay, m.dispatch.envelope.setDecay),
+            envSustain: () => internals.reactToControlChange(direction, envSustain, m.dispatch.envelope.setSustain),
+            envRelease: () => internals.reactToControlChange(direction, envRelease, m.dispatch.envelope.setRelease),
             // Effects
             distortion: () => internals.reactToControlChange(direction, distortion, m.dispatch.synth.setDistortion),
             reverb: () => internals.reactToControlChange(direction, reverb, m.dispatch.synth.setReverb),
@@ -162,14 +179,22 @@ module.exports = function MidiTransport({ attack, release, onChangeSynth }) {
         }
     }, [
         m,
+        // Oscillator 1
         osc1Waveform,
         osc1Octave,
         osc1Pitch,
         osc1Volume,
+        // Oscillator 2
         osc2Waveform,
         osc2Octave,
         osc2Pitch,
         osc2Volume,
+        // Envelope
+        envAttack,
+        envDecay,
+        envSustain,
+        envRelease,
+        // Effects
         distortion,
         reverb,
         delayFeedback,
@@ -197,6 +222,11 @@ internals.midiMaps = {
         effect3depth: 'osc2Octave',
         attacktime: 'osc2Pitch',
         decaytime: 'osc2Volume',
+        // Envelope
+        controller114: 'envAttack',
+        generalpurposecontroller3: 'envDecay',
+        generalpurposecontroller4: 'envSustain',
+        generalpurposecontroller1: 'envRelease',
         // Effects
         generalpurposecontroller2: 'distortion',
         effect1depth: 'reverb',

@@ -5,6 +5,7 @@ const ReduxDevtools = require('redux-devtools-extension/logOnlyInProduction');
 const Synth = require('./synth');
 const Osc1 = require('./osc1');
 const Osc2 = require('./osc2');
+const Envelope = require('./envelope');
 const Midi = require('./midi');
 const Settings = require('./settings');
 const Router = require('./router');
@@ -16,6 +17,7 @@ exports.create = (options = {}) => {
             synth: Synth(middleEnd, options),
             osc1: Osc1(middleEnd, options),
             osc2: Osc2(middleEnd, options),
+            envelope: Envelope(middleEnd, options),
             midi: Midi(middleEnd, options),
             settings: Settings(middleEnd, options),
             router: Router(middleEnd, options)

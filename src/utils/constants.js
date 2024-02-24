@@ -14,8 +14,8 @@ exports.SYNTH_TYPES = {
 
 exports.OSCILLATOR_WAVEFORMS = {
     SAWTOOTH: 'sawtooth',
-    TRIANGLE: 'triangle',
     SQUARE: 'square',
+    TRIANGLE: 'triangle',
     SINE: 'sine'
 };
 

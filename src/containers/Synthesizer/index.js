@@ -1,4 +1,4 @@
-const { useCallback, useEffect } = require('react');
+const { useState, useCallback, useEffect } = require('react');
 const T = require('prop-types');
 const { useMiddleEnd } = require('strange-middle-end');
 const { useSelector } = require('react-redux');
@@ -9,6 +9,8 @@ const { SYNTH_TRANSPORTS } = require('../../utils/constants');
 const internals = {};
 
 module.exports = function Synthesizer({ Tone }) {
+
+    const [envelope, setEnvelope] = useState();
 
     const m = useMiddleEnd();
     const transport = useSelector(m.selectors.synth.getTransport);
@@ -29,9 +31,19 @@ module.exports = function Synthesizer({ Tone }) {
 
     useEffect(() => {
 
-        if (Tone && !voice1) {
+        // TODO: Figure out how to make this work
+        if (Tone && !envelope) {
+            setEnvelope(new Tone.AmplitudeEnvelope({
+                attack: 1,
+                decay: 0.2,
+                sustain: 1.0,
+                release: 0.8
+            }).toDestination());
+        }
 
-            m.dispatch.synth.setVoice1(new Tone.Synth().toDestination());
+        if (Tone && envelope && !voice1) {
+
+            m.dispatch.synth.setVoice1(new Tone.Synth({ envelope }).toDestination());
         }
 
         if (voice1 && osc1Waveform !== voice1.oscillator.type) {
@@ -44,6 +56,7 @@ module.exports = function Synthesizer({ Tone }) {
     }, [
         m,
         Tone,
+        envelope,
         voice1,
         osc1Waveform,
         osc1Volume
@@ -51,9 +64,9 @@ module.exports = function Synthesizer({ Tone }) {
 
     useEffect(() => {
 
-        if (Tone && !voice2) {
+        if (Tone && envelope && !voice2) {
 
-            m.dispatch.synth.setVoice2(new Tone.Synth().toDestination());
+            m.dispatch.synth.setVoice2(new Tone.Synth({ envelope }).toDestination());
         }
 
         if (voice2 && osc2Waveform !== voice2.oscillator.type) {
@@ -66,6 +79,7 @@ module.exports = function Synthesizer({ Tone }) {
     }, [
         m,
         Tone,
+        envelope,
         voice2,
         osc2Waveform,
         osc2Volume
@@ -73,15 +87,17 @@ module.exports = function Synthesizer({ Tone }) {
 
     const attack = useCallback((note, time) => {
 
+        envelope?.triggerAttack(time || Tone.now());
         voice1?.triggerAttack(internals.pitchShift(note, osc1Octave, osc1Pitch), time || Tone.now());
         voice2?.triggerAttack(internals.pitchShift(note, osc2Octave, osc2Pitch), time || Tone.now());
-    }, [Tone, voice1, osc1Octave, osc1Pitch, voice2, osc2Octave, osc2Pitch]);
+    }, [Tone, envelope, voice1, osc1Octave, osc1Pitch, voice2, osc2Octave, osc2Pitch]);
 
     const release = useCallback((time) => {
 
+        envelope?.triggerRelease(time || Tone.now());
         voice1.triggerRelease(time || Tone.now());
         voice2.triggerRelease(time || Tone.now());
-    }, [Tone, voice1, voice2]);
+    }, [Tone, envelope, voice1, voice2]);
 
     const handleUpdateSynth = useCallback(({ frequency }) => {
 
